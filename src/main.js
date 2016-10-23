@@ -1,0 +1,112 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import App from './App'
+
+const FastClick = require('fastclick')
+FastClick.attach(document.body)
+
+Vue.use(Router)
+Vue.config.devtools = true
+
+import Device from './plugins/device'
+import ToastPlugin from './plugins/toast'
+import AlertPlugin from './plugins/alert'
+// $device
+Vue.use(Device)
+Vue.use(ToastPlugin)
+Vue.use(AlertPlugin)
+
+const router = new Router({
+  hashbang: true,
+  history: false,
+  saveScrollPosition: true,
+  transitionOnLoad: true
+})
+
+/**
+* sync router params
+*/
+import { sync } from 'vuex-router-sync'
+import store from './vuex'
+
+let history = window.sessionStorage
+history.clear()
+let historyCount = history.getItem('count') * 1 || 0
+history.setItem('/', 0)
+
+/**
+* sync router loading status
+*/
+router.beforeEach(({ to, from, next }) => {
+  const toIndex = history.getItem(to.path)
+  const fromIndex = history.getItem(from.path)
+  if (toIndex) {
+    if (toIndex > fromIndex) {
+      store.dispatch('goForward')
+    } else {
+      store.dispatch('goReverse')
+    }
+  } else {
+    ++historyCount
+    history.setItem('count', historyCount)
+    to.path !== '/' && history.setItem(to.path, historyCount)
+    store.dispatch('goForward')
+  }
+  store.dispatch('showLoading')
+  setTimeout(next, 50)
+})
+router.afterEach(() => {
+  store.dispatch('hideLoading')
+})
+
+sync(store, router)
+
+import { map } from './router.map.js'
+
+router.map(map)
+
+// save position for demo page
+// let demoScrollTop = 0
+// function saveDemoScrollTop () {
+//   console.log(demoScrollTop)
+//   demoScrollTop = window.scrollY
+// }
+
+// router.beforeEach(function (transition) {
+//   if (transition.to.fullPath !== '/demo') {
+//     window.removeEventListener('scroll', saveDemoScrollTop, false)
+//   }
+//   if (/\/http/.test(transition.to.path)) {
+//     let url = transition.to.path.split('http')[1]
+//     window.location.href = `http${url}`
+//   } else {
+//     if (/\/demo\/component\/\w+/.test(transition.to.path)) {
+//       router.go({
+//         replace: true,
+//         path: transition.to.path.replace('/demo', ''),
+//         append: false
+//       })
+//     } else {
+//       transition.next()
+//     }
+//   }
+// })
+
+// router.afterEach(function (transition) {
+//   if (transition.to.path !== '/demo') {
+//     window.scrollTo(0, 0)
+//   } else {
+//     window.removeEventListener('scroll', saveDemoScrollTop, false)
+//     // if from component page
+//     if (demoScrollTop && /component/.test(transition.from.path)) {
+//       setTimeout(function () {
+//         window.scrollTo(0, demoScrollTop)
+//       }, 100)
+//     }
+//     setTimeout(function () {
+//       window.addEventListener('scroll', saveDemoScrollTop, false)
+//     }, 1000)
+//   }
+// })
+
+router.start(App, '#app')

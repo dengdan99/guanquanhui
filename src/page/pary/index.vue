@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div class="menu">
-       <scroller lock-x>
-          <div class="box1">
-            <g-panel v-for="item in items" :info="item"></g-panel>
-          </div>
-        </scroller>
-    </div>
+  <div class="bg-gary">
+    <scroller lock-x use-pulldown :pulldown-config="pulldownConfig" @pulldown:loading="load">
+      <div class="box1 warp-bottom">
+        <g-panel v-for="item in items" :info="item"></g-panel>
+      </div>
+    </scroller>
   </div>
 </template>
 
@@ -21,6 +19,16 @@ export default {
   },
   data () {
     return {
+      pulldownConfig: {
+        content: '下拉加载更多',
+        pullUpHeight: 60,
+        height: 40,
+        autoRefresh: false,
+        downContent: '下拉加载更多',
+        upContent: '释放后加载',
+        loadingContent: '加载中...',
+        clsPrefix: 'xs-plugin-pullup-'
+      },
       items: [
         {
           title: '标题标题标题标题标题标题标题',
@@ -59,13 +67,18 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    load (uuid) {
+      setTimeout(() => {
+        this.$broadcast('pulldown:reset', uuid)
+      }, 2000)
+    }
   }
 }
 </script>
 
 <style scoped lange="less">
-@import '../../styles/1px.less';
-.menu {
-  background-color: #fff;
-}
+
+
 </style>

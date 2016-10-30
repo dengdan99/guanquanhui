@@ -2,7 +2,7 @@
   <div class="bg-gary">
     <scroller lock-x use-pulldown :pulldown-config="pulldownConfig" @pulldown:loading="load">
       <div class="box1 warp-bottom">
-        <g-panel v-for="item in items" :info="item"></g-panel>
+        <g-panel v-for="item in patyList" :info="item" @click="goto(item)"></g-panel>
       </div>
     </scroller>
   </div>
@@ -10,12 +10,21 @@
 
 <script>
 import { Scroller, Masker, GPanel } from '../../components'
+import { mapGetters, mapActions } from 'vuex'
+import { go } from '../../libs/router'
 
 export default {
   components: {
     Scroller,
     Masker,
     GPanel
+  },
+  ready () {
+    this.getPatyList({
+      isAdd: false,
+      itemsPerPage: this.param.size,
+      param: this.param
+    })
   },
   data () {
     return {
@@ -29,50 +38,33 @@ export default {
         loadingContent: '加载中...',
         clsPrefix: 'xs-plugin-pullup-'
       },
-      items: [
-        {
-          title: '标题标题标题标题标题标题标题',
-          date: '2014.10.112',
-          src: '/static/pic/index_pic_demo.jpg',
-          alt: '图片描述',
-          desc: '描述描述'
-        },
-        {
-          title: '标题',
-          date: '2014.10.12',
-          src: '/static/pic/index_pic_demo.jpg',
-          alt: '图片描述',
-          desc: '描述描述'
-        },
-        {
-          title: '标题',
-          date: '2014.10.12',
-          src: '/static/pic/index_pic_demo.jpg',
-          alt: '图片描述',
-          desc: '描述描述'
-        },
-        {
-          title: '标题',
-          date: '2014.10.12',
-          src: '/static/pic/index_pic_demo.jpg',
-          alt: '图片描述',
-          desc: '描述描述'
-        },
-        {
-          title: '标题',
-          date: '2014.10.12',
-          src: '/static/pic/index_pic_demo.jpg',
-          alt: '图片描述',
-          desc: '描述描述'
-        }
-      ]
+      param: {
+        offset: 0,
+        size: 1
+      }
     }
   },
+  computed: {
+    ...mapGetters([
+      'patyList',
+      'patyIsMore'
+    ])
+  },
   methods: {
+    ...mapActions([
+      'getPatyList'
+    ]),
     load (uuid) {
-      setTimeout(() => {
+      this.getPatyList({
+        isAdd: true,
+        itemsPerPage: this.param.size,
+        param: this.param
+      }).then(() => {
         this.$broadcast('pulldown:reset', uuid)
-      }, 2000)
+      })
+    },
+    goto (item) {
+      go('/paty/detail/' + item.id, this.$router)
     }
   }
 }

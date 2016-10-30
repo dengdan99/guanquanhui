@@ -27,5 +27,14 @@ Vue.http.interceptors.push((request, next) => {
 })
 
 export const UserInfoResource = Vue.resource(API_ROOT + 'api/user{/id}')
-export const ArticleResource = Vue.resource(API_ROOT + 'api/moto_sale{/id}{/controller}')
+export const ArticleListResource = Vue.resource(API_ROOT + 'api/article/list{/id}{/controller}')
+export const ArticleResource = Vue.resource(API_ROOT + 'api/article/detail{/id}')
 export const DicResource = Vue.resource(API_ROOT + 'api/home/common')
+export const PatyResource = Vue.resource(API_ROOT + 'api/activity{/id}{/controller}')
+export const baikeResource = Vue.resource(API_ROOT + 'api/baike{/controller}')
+export const communityResource = Vue.resource(API_ROOT + 'api/merchant_club{/controller}')
+export const clubResource = Vue.resource(API_ROOT + 'api/club{/id}')
+export const merchantResource = Vue.resource(API_ROOT + 'api/merchant{/id}')
+
+export const orderResource = Vue.resource(API_ROOT + 'api/complaint{/id}{/controller}')
+export const orderListResource = Vue.resource(API_ROOT + 'api/complaint/mine')

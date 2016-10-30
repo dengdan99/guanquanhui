@@ -2,7 +2,7 @@
 <div class="article-list">
     <a v-for="list in lists" href="javascript:void(0);" @click="goUrl('/dmo')" class="media-box">
         <div class="media-box__hd">
-            <img class="media-box__thumb" :src="list.src" alt="">
+            <img class="media-box__thumb" :src="list.image" alt="">
         </div>
         <div class="media-box__bd">
             <h4 class="media-box__title">{{list.title}}</h4>

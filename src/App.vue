@@ -54,29 +54,33 @@ export default {
       menuData1: [
         {
           text: '专题介绍',
-          link: '/'
+          link: '/article/list/3'
         },
         {
-          text: '政策解读',
-          link: '/'
+          text: '新闻栏目',
+          link: '/article/list/1'
         },
         {
-          text: '老马支招',
-          link: '/'
+          text: '专题栏目',
+          link: '/article/list/2'
         },
         {
-          text: '社群活动',
-          link: '/'
+          text: '新闻栏目',
+          link: '/article/list/3'
         }
       ],
       menuData2: [
         {
           text: '活动列表',
-          link: '/pary/index'
+          link: '/paty/index'
         },
         {
-          text: '活动详细',
-          link: '/pary/detail'
+          text: '办事百科',
+          link: '/baike/index'
+        },
+        {
+          text: '社区大厦',
+          link: '/dasha/index'
         }
       ],
       link3: '/user/index'

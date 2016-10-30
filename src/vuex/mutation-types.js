@@ -15,3 +15,23 @@ export const GET_ARTICLE_LIST_FAILURE = 'GET_ARTICLE_LIST_FAILURE'
 
 // user
 export const UPDATE_USERINFO = 'UPDATE_USERINFO'
+
+// 活动
+export const PATY = 'PATY'
+export const PATY_LIST = 'PATY_LIST'
+export const ADD_PATY_LIST = 'ADD_PATY_LIST'
+export const REQUEST_PATY_LIST = 'REQUEST_PATY_LIST'
+export const GET_PATY_LIST_FAILURE = 'GET_PATY_LIST_FAILURE'
+
+// 百科
+export const UPDATE_SREACH = 'UPDATE_SREACH'
+export const BAIKE_LIST = 'BAIKE_LIST'
+export const ADD_BAIKE_LIST = 'ADD_BAIKE_LIST'
+export const REQUEST_BAIKE_LIST = 'REQUEST_BAIKE_LIST'
+export const GET_BAIKE_LIST_FAILURE = 'GET_BAIKE_LIST_FAILURE'
+
+// 社群
+export const COMP = 'COMP'
+export const COMT = 'COMT'
+export const COMB = 'COMB'
+export const COM_LIST = 'COM_LIST'

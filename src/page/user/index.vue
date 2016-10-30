@@ -19,13 +19,13 @@
           </a>
         </flexbox-item>
         <flexbox-item class="vux-1px-r">
-          <a class="item item3" href="javascript:;">
+          <a class="item item3" href="javascript:;" @click="goUrl('/order/index')">
             <div class="img iconfont">&#xe8db;</div>
             <div class="text">我的订单</div>
           </a>
         </flexbox-item>
         <flexbox-item>
-          <a class="item item4" href="javascript:;">
+          <a class="item item4" href="javascript:;" @click="goUrl('/apply/tep')">
             <div class="img iconfont">&#xe7cd;</div>
             <div class="text">申请志愿者</div>
           </a>

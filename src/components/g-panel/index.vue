@@ -1,15 +1,15 @@
 <template>
 <div class="weui_panel g-panel">
-  <div class="weui_panel_hd g-panel-hd"><span>{{info.date}}</span></div>
+  <div class="weui_panel_hd g-panel-hd"><span>{{info.active_time}}</span></div>
   <div class="weui_panel_bd g-panel-bd">
     <div class="weui_media_box weui_media_text">
       <h4 class="weui_media_title">{{info.title}}</h4>
-      <p class="weui_media_desc"><img :src="info.src" height="120" class="weui_media_pic" :alt="info.alt" /></p>
-      <p class="weui_media_desc">{{info.desc}}</p>
+      <p class="weui_media_desc"><img :src="info.image" height="120" class="weui_media_pic" :alt="info.title" /></p>
+      <p class="weui_media_desc">{{info.abstract}}</p>
       <ul class="weui_media_info">
               <li class="weui_media_info_meta">{{info.from}}</li>
-              <li class="weui_media_info_meta">{{info.date}}</li>
-              <li class="weui_media_info_meta weui_media_info_meta_extra">{{info.other}}</li>
+<!--               <li class="weui_media_info_meta">{{info.active_time}}</li>
+              <li class="weui_media_info_meta weui_media_info_meta_extra">{{info.other}}</li> -->
           </ul>
     </div>
   </div>
@@ -17,9 +17,12 @@
 </template>
 
 <script>
+
 export default {
   props: {
     info: Object
+  },
+  methods: {
   }
 }
 </script>

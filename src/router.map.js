@@ -92,8 +92,19 @@ import DeviceDemo from './demos/Device'
 import ztjs from './page/ztjs'
 import user from './page/user/index'
 import userInfo from './page/user/info'
-import paryList from './page/pary/index'
-import paryDetail from './page/pary/detail'
+import patyList from './page/pary/index'
+import patyDetail from './page/pary/detail'
+import baike from './page/baike/index'
+import dasha from './page/dasha/index'
+import comp from './page/dasha/comp'
+import club from './page/dasha/club'
+import order from './page/order/index'
+import orderNew from './page/order/new'
+import orderView from './page/order/view'
+import applyTep from './page/apply/tep'
+import applyAgree from './page/apply/agree'
+import articleDetail from './page/article/detail'
+import articleList from './page/article/list'
 
 export const map = {
   '/': {
@@ -105,11 +116,44 @@ export const map = {
   '/user/info': {
     component: userInfo
   },
-  '/pary/index': {
-    component: paryList
+  '/paty/index': {
+    component: patyList
   },
-  '/pary/detail': {
-    component: paryDetail
+  '/paty/detail/:id': {
+    component: patyDetail
+  },
+  '/baike/index': {
+    component: baike
+  },
+  '/dasha/index': {
+    component: dasha
+  },
+  '/dasha/comp/:id': {
+    component: comp
+  },
+  '/dasha/club/:id': {
+    component: club
+  },
+  '/order/index': {
+    component: order
+  },
+  '/order/new': {
+    component: orderNew
+  },
+  '/order/view/:id': {
+    component: orderView
+  },
+  '/apply/tep': {
+    component: applyTep
+  },
+  '/apply/agree': {
+    component: applyAgree
+  },
+  '/article/detail/:id': {
+    component: articleDetail
+  },
+  '/article/list/:id': {
+    component: articleList
   },
 
   // other

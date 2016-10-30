@@ -84,7 +84,10 @@ export default {
 }
 
 .vux-step-item-title {
-  font-size: 0.8rem;
+  font-size: 1rem;
+}
+.vux-step-item-description{
+  font-size: 0.6rem;
 }
 
 .vux-step-item-head {

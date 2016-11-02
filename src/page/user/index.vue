@@ -2,8 +2,8 @@
   <div>
     <div class="index-header">
       <div class="userInfo">
-        <img src="/static/demo/comment/1.jpg" class="av_img">
-        <div class="nickName">用户昵称</div>
+        <img :src="userInfo.avator" class="av_img">
+        <div class="nickName">{{userInfo.nickname}}</div>
       </div>
       <flexbox class="vux-1px-tb" :gutter="0">
         <flexbox-item class="vux-1px-r">
@@ -30,17 +30,12 @@
             <div class="text">申请志愿者</div>
           </a>
         </flexbox-item>
-      </flexbox>
-      <flexbox class="vux-1px-tb" :gutter="0">
         <flexbox-item>
           <a class="item item4" href="javascript:;">
             <div class="img iconfont">&#xea51;</div>
-            <div class="text">申请志积分榜</div>
+            <div class="text">积分榜</div>
           </a>
         </flexbox-item>
-        <flexbox-item></flexbox-item>
-        <flexbox-item></flexbox-item>
-        <flexbox-item></flexbox-item>
       </flexbox>
     </div>
     <g-media :lists="artilceList"></g-media>
@@ -59,7 +54,7 @@
 
 <script>
 import { Flexbox, FlexboxItem, GMedia } from '../../components'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
 
 export default {
@@ -69,13 +64,11 @@ export default {
     GMedia
   },
   ready () {
+    this.getUserInfo()
     this.setPageTitle('用户中心')
   },
   data () {
     return {
-      user: {
-        nickName: '张三'
-      },
       artilceList: [
         {
           src: '/static/demo/comment/2.jpg',
@@ -95,11 +88,16 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'userInfo',
+      'dic'
+    ])
   },
   methods: {
     ...mapActions([
       'setPageTitle',
-      'hideTabbar'
+      'hideTabbar',
+      'getUserInfo'
     ]),
     goUrl (link) {
       go(link, this.$router)

@@ -41,17 +41,15 @@ export default {
   },
   ready () {
     // 获取user 并 赋值
-    this.getUserInfo(9).then(() => {
-      if (this.userInfo.sex !== 0) {
-        this.showGender.push(this.userInfo.sex.toString())
-      }
-      if (this.userInfo.profession_id !== 0) {
-        this.showJob.push(this.userInfo.profession_id.toString())
-      }
-      if (this.userInfo.feature_id !== 0) {
-        this.showParty.push(this.userInfo.feature_id.toString())
-      }
-    })
+    if (this.userInfo.sex !== 0) {
+      this.showGender.push(this.userInfo.sex.toString())
+    }
+    if (this.userInfo.profession_id !== 0) {
+      this.showJob.push(this.userInfo.profession_id.toString())
+    }
+    if (this.userInfo.feature_id !== 0) {
+      this.showParty.push(this.userInfo.feature_id.toString())
+    }
     this.getDic()
   },
   data () {
@@ -72,7 +70,6 @@ export default {
     ...mapActions([
       'setPageTitle',
       'hideTabbar',
-      'getUserInfo',
       'getDic',
       'showLoading',
       'hideLoading'

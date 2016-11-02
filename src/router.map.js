@@ -89,7 +89,9 @@ import Popover from './components/popover/DemoIndex'
 import DeviceDemo from './demos/Device'
 
 // page
-import ztjs from './page/ztjs'
+import notFound from './page/notFound'
+import login from './page/login'
+import index from './page/index/index'
 import user from './page/user/index'
 import userInfo from './page/user/info'
 import patyList from './page/pary/index'
@@ -105,10 +107,14 @@ import applyTep from './page/apply/tep'
 import applyAgree from './page/apply/agree'
 import articleDetail from './page/article/detail'
 import articleList from './page/article/list'
+import articleZhuanti from './page/article/zhuanti'
 
 export const map = {
   '/': {
-    component: ztjs
+    component: index
+  },
+  '/login/:uid/:token': {
+    component: login
   },
   '/user/index': {
     component: user
@@ -154,6 +160,12 @@ export const map = {
   },
   '/article/list/:id': {
     component: articleList
+  },
+  '/article/zhuanti/:id': {
+    component: articleZhuanti
+  },
+  '*': {
+    component: notFound
   },
 
   // other

@@ -1,15 +1,15 @@
 <template>
   <div>
-    <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" @pullup:loading="load" height="-50px">
+    <swiper :list="banner_list" auto height="180px" dots-class="custom-bottom" height="-225px" dots-position="center"></swiper>
+    <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" @pullup:loading="load" heigth="-50px">
       <div class="box2">
-      <swiper :list="banner_list" auto height="180px" dots-class="custom-bottom" dots-position="center"></swiper>
-      <div class="zt_list" @click="goto(item)" v-for="item in articleList">
-        <div class="pic"><img :src="item.image"></div>
-        <div class="text">
-          <h3 class="title">{{item.title}}</h3>
-          <p class="desc">{{item.title}}</p>
+        <div class="zt_list" @click="goto(item)" v-for="item in articleList">
+          <div class="pic"><img :src="item.image"></div>
+          <div class="text">
+            <h3 class="title">{{item.title}}</h3>
+            <p class="desc">{{item.title}}</p>
+          </div>
         </div>
-      </div>
       </div>
     </scroller>
   </div>
@@ -18,7 +18,6 @@
 <script>
 import { Swiper, Scroller } from '../../components'
 import { mapGetters, mapActions } from 'vuex'
-import { getAdList } from '../../api'
 import { go } from '../../libs/router'
 
 export default {
@@ -26,20 +25,18 @@ export default {
     Swiper,
     Scroller
   },
-  route: {
-    canReuse: false,
-    activate: function (transition) {
-      this.listId = transition.to.params.id
-      transition.next()
-    }
-  },
   ready () {
-    // this.listId = this.$route.params.id
-    // this.firstLoad()
+    this.getArticleList({
+      id: this.$route.params.id,
+      isAdd: false,
+      itemsPerPage: this.param.size,
+      param: this.param
+    }).then(() => {
+      this.param.offset += this.param.size
+    })
   },
   data () {
     return {
-      listId: 0,
       pullupConfig: {
         content: '上拉加载更多',
         downContent: '松开进行加载',
@@ -48,7 +45,7 @@ export default {
       },
       param: {
         offset: 0,
-        size: 2
+        size: 1
       },
       banner_list: [{
         url: 'javascript:',
@@ -65,12 +62,6 @@ export default {
       }]
     }
   },
-  watch: {
-    listId: function (val, oldVal) {
-      this.firstLoad()
-      this.param.offset = 0
-    }
-  },
   computed: {
     ...mapGetters([
       'articleList',
@@ -83,39 +74,19 @@ export default {
     ]),
     load (uuid) {
       this.getArticleList({
-        id: this.listId,
+        id: this.$route.params.id,
         isAdd: true,
         itemsPerPage: this.param.size,
         param: this.param
       }).then(res => {
+        console.log(res)
         this.param.offset += this.param.size
-        this.$broadcast('pullup:reset', uuid)
-        if (this.articleIsMore) {
+
+        if (this.baikeIsMore) {
           this.$broadcast('pullup:reset', uuid)
         } else {
           this.$broadcast('pullup:done', uuid)
         }
-      })
-    },
-    firstLoad () {
-      this.getArticleList({
-        id: this.listId,
-        isAdd: false,
-        itemsPerPage: this.param.size,
-        param: this.param
-      }).then(() => {
-        this.param.offset += this.param.size
-      })
-      getAdList(this.listId).then(response => {
-        let Json = response.data
-        Json.map(item => {
-          return {
-            url: '/article/detail/' + item.id,
-            img: item.img,
-            title: item.text
-          }
-        })
-        this.banner_list = Json
       })
     },
     goto (item) {

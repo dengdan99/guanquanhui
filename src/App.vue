@@ -12,9 +12,9 @@
       ></router-view>
       <!--bottom slot-->
       <tabbar class="vux-demo-tabbar" icon-class="vux-center" v-show="showTabbar" slot="bottom">
-        <tabbar-item :selected="route.path === '/'" :menu-data="menuData1">
+        <tabbar-item :selected="isMenu1" :menu-data="menuData1">
           <span class="demo-icon-22" slot="icon">&#xe643;</span>
-          <span slot="label">观察视野</span>
+          <span slot="label">观视野</span>
         </tabbar-item>
         <tabbar-item :selected="isDemo" :menu-data="menuData2">
           <span class="demo-icon-22" slot="icon">&#xe65a;</span>
@@ -32,9 +32,10 @@
 <script>
 import store from './vuex'
 import * as auth from './libs/authService'
-import { go } from './libs/router'
+// import { go } from './libs/router'
 import { Tabbar, TabbarItem, Loading, ViewBox, XHeader } from './components'
 import { mapGetters } from 'vuex'
+import { getAllList } from './api'
 
 export default {
   components: {
@@ -51,35 +52,28 @@ export default {
         forward: 'slideRL',
         back: 'slideLR'
       },
+      link1: '/',
       menuData1: [
         {
-          text: '专题介绍',
-          link: '/article/list/3'
-        },
-        {
-          text: '新闻栏目',
-          link: '/article/list/1'
-        },
-        {
-          text: '专题栏目',
-          link: '/article/list/2'
-        },
-        {
-          text: '新闻栏目',
-          link: '/article/list/3'
+          text: '社群活动',
+          link: '/paty/index'
         }
       ],
       menuData2: [
-        {
-          text: '活动列表',
-          link: '/paty/index'
-        },
         {
           text: '办事百科',
           link: '/baike/index'
         },
         {
-          text: '社区大厦',
+          text: '订单服务',
+          link: '/order/new'
+        },
+        {
+          text: '订单跟踪',
+          link: '/order/index'
+        },
+        {
+          text: '社群大厦',
           link: '/dasha/index'
         }
       ],
@@ -87,26 +81,32 @@ export default {
     }
   },
   ready () {
-    this.login('demo')
+    this.login(9, 'demo')
     this.cheackUser()
+    getAllList().then(response => {
+      const Json = response.data
+      let menu = Json.map(item => {
+        return {
+          text: item.name,
+          link: '/article/list/' + item.id
+        }
+      })
+      this.menuData1.push(...menu)
+    })
   },
   methods: {
     scrollTop () {
       this.$refs.viewBox.$els.viewBoxBody.scrollTop = 0
     },
     cheackUser () {
-      if (!auth.isLogin) {
+      if (!auth.isLogin()) {
         auth.saveCookie('startPage', this.$route.path)
         window.location.href = 'http://hh.wangziqing.cc/api/wechat/oauth2'
-      } else {
-        if (auth.getCookie('startPage') !== '') {
-          go(auth.getCookie('startPage'))
-          auth.getCookie('startPage', '')
-        }
       }
     },
-    login (token) {
+    login (uid, token) {
       auth.saveCookie('token', token)
+      auth.saveCookie('uid', uid)
     }
   },
   computed: {
@@ -125,8 +125,11 @@ export default {
     headerTransition () {
       return this.direction === 'forward' ? 'vux-header-fade-in-right' : 'vux-header-fade-in-left'
     },
+    isMenu1 () {
+      return /article|paty/.test(this.route.path)
+    },
     isDemo () {
-      return /component|ztjs/.test(this.route.path)
+      return /baike|order|dasha/.test(this.route.path)
     },
     title () {
       return this.pageTitle

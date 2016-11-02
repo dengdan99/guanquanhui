@@ -9,7 +9,8 @@ import {
   clubResource,
   merchantResource,
   orderResource,
-  orderListResource
+  orderListResource,
+  TypeResource
 } from './resources'
 
 export const getArticleList = (id, options) => {
@@ -60,4 +61,10 @@ export const newOrder = (options) => {
 }
 export const starOrder = (id, options) => {
   return orderResource.update({id}, options)
+}
+export const getAllList = () => {
+  return TypeResource.get({id: ''})
+}
+export const getAdList = (id) => {
+  return TypeResource.get({id})
 }

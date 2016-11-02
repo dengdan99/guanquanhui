@@ -1,5 +1,6 @@
 import * as api from '../api'
 import * as types from './mutation-types'
+import { getCookie } from '../libs/authService'
 
 export const showLoading = ({ commit }) => {
   commit(types.UPDATE_LOADING, true)
@@ -65,6 +66,7 @@ export const getDic = ({commit}) => {
 }
 
 export const getUserInfo = ({commit}, uid) => {
+  if (typeof uid === 'undefined') uid = getCookie('uid')
   return api.getFrontUserInfo(uid).then(response => {
     const json = response.data
     commit(types.UPDATE_USERINFO, json)

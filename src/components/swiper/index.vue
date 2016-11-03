@@ -211,6 +211,7 @@ export default {
     position: relative;
 
     > .@{pre}-swiper-item {
+      overflow: auto;
       position: absolute;
       top: 0;
       left: 0;

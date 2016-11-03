@@ -10,7 +10,9 @@ import {
   merchantResource,
   orderResource,
   orderListResource,
-  TypeResource
+  TypeResource,
+  ArticleHomeResource,
+  PatyAboutResource
 } from './resources'
 
 export const getArticleList = (id, options) => {
@@ -30,6 +32,9 @@ export const getDic = () => {
 }
 export const getPatyLIst = (options) => {
   return PatyResource.get({id: '', ...options})
+}
+export const getAboutList = (options) => {
+  return PatyAboutResource.get(options)
 }
 export const getPaty = (pid) => {
   return PatyResource.get({id: pid})
@@ -67,4 +72,7 @@ export const getAllList = () => {
 }
 export const getAdList = (id) => {
   return TypeResource.get({id})
+}
+export const getHomeAritcle = (options) => {
+  return ArticleHomeResource.get(options)
 }

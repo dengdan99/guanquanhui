@@ -55,8 +55,8 @@ export default {
       link1: '/',
       menuData1: [
         {
-          text: '社群活动',
-          link: '/paty/index'
+          text: '留白',
+          link: '/baike/index'
         }
       ],
       menuData2: [
@@ -81,17 +81,18 @@ export default {
     }
   },
   ready () {
-    this.login(9, 'demo')
-    this.cheackUser()
+    // this.login(9, 'demo')
+    if (/login/.test(this.$route.path)) {
+    // 访问的是登录页面
+    } else {
+      this.cheackUser()
+    }
     getAllList().then(response => {
       const Json = response.data
-      let menu = Json.map(item => {
-        return {
-          text: item.name,
-          link: '/article/list/' + item.id
-        }
-      })
-      this.menuData1.push(...menu)
+      this.menuData1 = Json.map(item => ({
+        text: item.name,
+        link: item.mode === 3 ? '/paty/detail/' + item.id : '/article/list/' + item.id
+      }))
     })
   },
   methods: {
@@ -107,6 +108,8 @@ export default {
     login (uid, token) {
       auth.saveCookie('token', token)
       auth.saveCookie('uid', uid)
+    },
+    getPath (mode) {
     }
   },
   computed: {

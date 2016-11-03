@@ -3,8 +3,26 @@
       <tab :line-width=2 active-color='#fabf01' :index.sync="index">
         <tab-item class="vux-center" :selected="demo2 === item" v-for="item in titles" @click="demo2 = item">{{item}}</tab-item>
       </tab>
-      <swiper :index.sync="index" :aspect-ratio="20" :show-dots="false">
-        <swiper-item>
+      <swiper :index.sync="index" :height="height" :show-dots="false" v-ref:swiper>
+        
+        <swiper-item v-ref:Sitem1>
+          <div class="pary-area">
+            <div class="datail">
+              <h2>{{paty.title}}</h2>
+              <div class="desc">{{paty.abstract}}</div>
+              <div class="content" id="article_content">{{{paty.content}}}</div>
+              <div class="p-info">
+                <span>浏览 {{paty.click}}</span>
+                <span>收藏 {{paty.favorite}}</span>
+              </div>
+            </div>
+            <g-media :lists="artilceList"></g-media>
+            <div class="zmPic">
+              <x-button type="primary" @click="showdialog=true">立即加入活动</x-button>
+            </div>
+          </div>
+        </swiper-item>
+        <swiper-item v-ref:Sitem2>
           <div class="qunzhu-area">
             <p class="zm-content">
                 <img :src="zmPic" class="zmPic" />
@@ -14,26 +32,11 @@
             <p class="yellow-f" style="margin-bottom: 20px">享有很多政府优惠策略</p>
             <div class="zmPic">
               <x-button type="primary" @click="showdialog=true">立即加入活动</x-button>
+              <x-button type="primary" @click="showdialog=true">暂不参与，先看热闹</x-button>
             </div>
           </div>
         </swiper-item>
-        <swiper-item>
-          <div class="pary-area">
-            <div class="datail">
-              <h2>{{paty.title}}</h2>
-              <div class="desc">{{paty.abstract}}</div>
-              <div class="content">{{{paty.content}}}</div>
-              <div class="p-info">
-                <span>浏览 {{paty.click}}</span>
-                <span>收藏 {{paty.favorite}}</span>
-              </div>
-            </div>
-            <g-media :lists="paty.recommend"></g-media>
-            <div class="zmPic">
-              <x-button type="primary" @click="showdialog=true">立即加入活动</x-button>
-            </div>
-          </div>
-        </swiper-item>
+
       </swiper>
 
       <dialog :show.sync="showdialog" class="dialog-demo" :hide-on-blur="true">
@@ -53,6 +56,8 @@
 <script>
 import { Tab, TabItem, Swiper, SwiperItem, XButton, GMedia, Dialog, Group, XInput } from '../../components'
 import { mapActions, mapGetters } from 'vuex'
+import { getAboutList } from '../../api'
+
 export default {
   components: {
     Tab,
@@ -65,33 +70,37 @@ export default {
     Group,
     XInput
   },
+  route: {
+    canReuse: false
+  },
   ready () {
     this.getPaty(this.$route.params.id).then((res) => {
+      // this.$nextTick(function () {
+      //   this.$refs.swiper.rerender()
+      //   console.log(this.$refs.sitem1.$el.getElementsByClassName('pary-area')[0].scrollHeight)
+      //   let newHeight = this.$refs.sitem1.$el.getElementsByClassName('pary-area')[0].scrollHeight + 'px'
+      //   this.$refs.sitem1.xheight = newHeight
+      // })
+    })
+    getAboutList().then(res => {
+      const Json = res.data.results
+      this.artilceList = Json.map(item => ({
+        id: item.id,
+        image: item.image,
+        title: item.title,
+        desc: item.address + item.abstract
+      }))
     })
   },
   data () {
     return {
       patyId: 0,
       zmPic: 'static/pic_qun.jpg',
-      titles: ['群主招募', '活动展示'],
-      demo2: '群主招募',
+      titles: ['活动展示', '群主招募'],
+      demo2: '活动展示',
       index: 0,
-      artilceList: [
-        {
-          src: '/static/demo/comment/2.jpg',
-          title: '标题标题',
-          desc: '描述描述描述描述描述描述描述描述描描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述述描述',
-          view: 20,
-          fav: 101
-        },
-        {
-          src: '/static/demo/comment/3.jpg',
-          title: '标题标题2222',
-          desc: '描述描述描述描述描述描述描述描述描述描述',
-          view: 20,
-          fav: 101
-        }
-      ],
+      height: '470px',
+      artilceList: [],
       joinPost: {
         name: '',
         mobile: ''
@@ -135,7 +144,7 @@ export default {
 }
 .zmPic{
   display: block;
-  width: 50%;
+  width: 70%;
   margin: 20px auto;
 }
 .zm-content{

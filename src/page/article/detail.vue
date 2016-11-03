@@ -4,7 +4,7 @@
       <div class="datail">
         <h2>{{data.title}}</h2>
         <div class="pic"><img :src="data.image" /></div>
-        <div class="content">{{{data.content}}}</div>
+        <div class="content" id="article_content">{{{data.content}}}</div>
         <p>创建时间： {{data.created_at}}</p>
         <p>最后修改： {{data.updated_at}}</p>
       </div>
@@ -37,6 +37,12 @@ export default {
 }
 </script>
 
+<style type="text/css">
+#article_content img{
+  width: 100%;
+  height: auto;
+}
+</style>
 <style scoped lang="less">
 .vux-tab .vux-tab-item{
   font-size: 16px
@@ -69,6 +75,7 @@ export default {
     h2{
       text-align: center;
       font-weight: normal;
+      margin-bottom: 20px;
     }
     .pic img{
       width: 100%;

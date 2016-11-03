@@ -20,7 +20,7 @@ Vue.http.interceptors.push((request, next) => {
     request.params.token = getCookie('token')
     // request.headers.Authorization = 'Bearer ' + getCookie('token').replace(/(^")|("$)/g, '')
   } else {
-    window.location = weixinLogin
+    // window.location = weixinLogin
   }
   // request.headers.Authorization = 'Bearer '
   next((response) => {
@@ -37,8 +37,11 @@ export const UserInfoResource = Vue.resource(API_ROOT + 'api/user{/id}')
 export const TypeResource = Vue.resource(API_ROOT + 'api/type{/id}')
 export const ArticleListResource = Vue.resource(API_ROOT + 'api/article/list{/id}{/controller}')
 export const ArticleResource = Vue.resource(API_ROOT + 'api/article/detail{/id}')
+export const ArticleHomeResource = Vue.resource(API_ROOT + 'api/article/home{/controller}')
 export const DicResource = Vue.resource(API_ROOT + 'api/home/common')
+export const PatyLastResource = Vue.resource(API_ROOT + 'api/activity/latest')
 export const PatyResource = Vue.resource(API_ROOT + 'api/activity{/id}{/controller}')
+export const PatyAboutResource = Vue.resource(API_ROOT + 'api/activity/about')
 export const baikeResource = Vue.resource(API_ROOT + 'api/baike{/controller}')
 export const communityResource = Vue.resource(API_ROOT + 'api/merchant_club{/controller}')
 export const clubResource = Vue.resource(API_ROOT + 'api/club{/id}')

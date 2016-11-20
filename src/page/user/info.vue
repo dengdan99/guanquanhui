@@ -1,29 +1,36 @@
 <template>
-<div>
+<div class="o-bg user-info">
   <div class="info-header">
     <h3>完成资料填写有小惊喜哦</h3>
   </div>
   <group title="基本资料">
-    <x-input title="姓名" name="username" :value.sync="userInfo.nickname" placeholder="请输入姓名" is-type="china-name"></x-input>
-    <calendar :value.sync="userInfo.birthday" :weeks-list="weeksList" title="出生年月" disable-future></calendar>
-    <x-input title="手机号码" :value.sync="userInfo.mobile" name="mobile" placeholder="请输入手机号码" keyboard="number" is-type="china-mobile"></x-input>
+    <x-input title="姓名" name="username" :value.sync="userInfo.nickname" placeholder="" is-type="china-name"></x-input>
+    <datetime
+      :value.sync="userInfo.birthday"
+      :min-year="1930"
+      :max-year="2016"
+      format="YYYY-MM-DD"
+      title="出生年月"
+      confirm-text="确定"
+      cancel-text="取消"
+    ></datetime>
+    <x-input title="手机号码" :value.sync="userInfo.mobile" name="mobile" placeholder="" keyboard="number" is-type="china-mobile"></x-input>
   </group>
 
   <group title="其他资料">
-    <popup-picker :fixed-columns="2" :columns="1" :data="dic.sex" title="性别" :value.sync="showGender" show-name placeholder="请选择性别" ></popup-picker>
-    <popup-picker :fixed-columns="2" :columns="1" :data="dic.profession" title="职业" :value.sync="showJob" show-name placeholder="请选择职业" ></popup-picker>
-    <popup-picker :fixed-columns="2" :columns="1" :data="dic.feature" title="政治面貌" :value.sync="showParty" show-name placeholder="请选择政治面貌" ></popup-picker>
+    <popup-picker :fixed-columns="2" :columns="1" :data="dic.sex" title="性别" :value.sync="showGender" show-name placeholder="" ></popup-picker>
+    <popup-picker :fixed-columns="2" :columns="1" :data="dic.profession" title="职业" :value.sync="showJob" show-name placeholder="" ></popup-picker>
+    <popup-picker :fixed-columns="2" :columns="1" :data="dic.feature" title="政治面貌" :value.sync="showParty" show-name placeholder="" ></popup-picker>
+    <popup-picker :fixed-columns="2" :columns="1" :data="dic.area" title="所在社区" :value.sync="showArea" show-name placeholder="" ></popup-picker>
   </group>
-
-  <group title="">
-    <x-button type="primary" @click="doPost">提交</x-button>
-  </group>
-  
+  <p style="margin-top: 10px;">
+    <x-button type="primary" @click="doPost">确认修改</x-button>
+  </p>
 </div>
 </template>
 
 <script>
-import { Switch, Group, XInput, Calendar, Checklist, XButton, Radio, PopupPicker } from '../../components'
+import { Switch, Group, XInput, Checklist, XButton, Radio, PopupPicker, Datetime } from '../../components'
 import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
 import { updateFrontUserInfo } from '../../api/'
@@ -33,31 +40,36 @@ export default {
     Switch,
     Group,
     XInput,
-    Calendar,
     Checklist,
     XButton,
     Radio,
-    PopupPicker
+    PopupPicker,
+    Datetime
   },
   ready () {
     // 获取user 并 赋值
-    if (this.userInfo.sex !== 0) {
-      this.showGender.push(this.userInfo.sex.toString())
-    }
-    if (this.userInfo.profession_id !== 0) {
-      this.showJob.push(this.userInfo.profession_id.toString())
-    }
-    if (this.userInfo.feature_id !== 0) {
-      this.showParty.push(this.userInfo.feature_id.toString())
-    }
-    this.getDic()
+    this.getDic().then(res => {
+      if (this.userInfo.sex !== 0) {
+        this.showGender.push(this.userInfo.sex.toString())
+      }
+      if (this.userInfo.profession_id !== 0) {
+        this.showJob.push(this.userInfo.profession_id.toString())
+      }
+      if (this.userInfo.feature_id !== 0) {
+        this.showParty.push(this.userInfo.feature_id.toString())
+      }
+      if (this.userInfo.area_id !== 0) {
+        this.showArea.push(this.userInfo.area_id.toString())
+      }
+    })
   },
   data () {
     return {
       weeksList: ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
       showGender: [],
       showJob: [],
-      showParty: []
+      showParty: [],
+      showArea: []
     }
   },
   computed: {
@@ -72,7 +84,8 @@ export default {
       'hideTabbar',
       'getDic',
       'showLoading',
-      'hideLoading'
+      'hideLoading',
+      'getUserInfo'
     ]),
     goUrl (link) {
       go(link, this.$router)
@@ -85,7 +98,8 @@ export default {
         birthday: this.userInfo.birthday,
         sex: this.showGender.length === 0 ? 0 : this.showGender[0],
         profession_id: this.showJob.length === 0 ? 0 : this.showJob[0],
-        feature_id: this.showParty.length === 0 ? 0 : this.showParty[0]
+        feature_id: this.showParty.length === 0 ? 0 : this.showParty[0],
+        area_id: this.showArea.length === 0 ? 0 : this.showArea[0]
       }
       if (!this.checkPost(postData)) {
         this.$vux.toast.show({
@@ -120,8 +134,14 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+.o-bg{
+  background-color: #fabf01;
+  height: 100%;
+}
+.o-bg .weui_cell{
+  background-color: #fabf01;
+}
 .info-header{
   padding: 10px 0;
   border-bottom: solid 2px #000;
@@ -131,5 +151,34 @@ export default {
 <style>
 .inline-calendar .week{
   font-size: 12px;
+}
+.user-info .weui_cell{
+  background-color: #fabf01;
+}
+.user-info .weui_cells_title{
+  color: #000
+}
+.user-info .weui_cell:before{
+  border-top-color: #000;
+  background-color: #000;
+}
+.user-info .weui_cells:before,.user-info .weui_cells:after{
+  border-top-color: #000;
+  background-color: #000;
+}
+.user-info .weui_cell_ft{
+  color: #000;
+}
+.user-info .weui_cell_ft.with_arrow:after{
+  border-color:#000;
+}
+.user-info button.weui_btn_primary{
+  width: 80%;
+  margin: 0 auto;
+  border: solid 1px #fbbe01;
+  border-radius: 5px;
+  background: linear-gradient(to bottom, #787878 0%,#222222 100%);
+  color: #fff;
+  font-family: "Microsoft YaHei"
 }
 </style>

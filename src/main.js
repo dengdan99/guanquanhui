@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from './App'
+import * as auth from './libs/authService'
 
 const FastClick = require('fastclick')
 FastClick.attach(document.body)
@@ -34,12 +35,26 @@ history.clear()
 let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
 
+if (process.env.NODE_ENV !== 'production') {
+  auth.saveCookie('token', 'demo')
+  auth.saveCookie('uid', 20)
+}
+
 /**
 * sync router loading status
 */
 router.beforeEach(({ to, from, next }) => {
   const toIndex = history.getItem(to.path)
   const fromIndex = history.getItem(from.path)
+
+  // if (!/login/.test(to.path)) {
+  //   if (!auth.isLogin()) {
+  //     auth.saveCookie('startPage', to.path)
+  //     window.location.href = 'http://hh.wangziqing.cc/api/wechat/oauth2'
+  //     return
+  //   }
+  // }
+
   if (toIndex) {
     if (toIndex > fromIndex) {
       store.dispatch('goForward')

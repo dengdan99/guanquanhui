@@ -17,6 +17,9 @@ export default {
 
 <style lang="less">
 @import '../../styles/weui/widget/weui_tab/weui_tab_tabbar';
+.weui_tabbar_label{
+  color: #222;
+}
 .weui_tabbar_icon {
   position: relative;
 }
@@ -28,6 +31,11 @@ export default {
   z-index: 101;
 }
 .weui_tabbar_item.weui_bar_item_on .weui_tabbar_label{
-  color: #b39020;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+}
+.weui_tabbar_item {
+  border-right: solid 1px #ccc;
 }
 </style>

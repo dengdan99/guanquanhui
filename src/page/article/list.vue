@@ -1,12 +1,12 @@
 <template>
   <div>
-    <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" @pullup:loading="load" height="-50px">
+    <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" @pullup:loading="load" height="-50px" keep-alive>
       <div class="box2">
       <swiper :list="banner_list" auto height="180px" dots-class="custom-bottom" dots-position="center"></swiper>
       <div class="zt_list" @click="goto(item)" v-for="item in articleList">
-        <div class="pic"><img :src="item.image"></div>
+        <div class="pic"><div class="img-area"><img :src="item.image" /></div></div>
         <div class="text">
-          <h3 class="title">{{item.title}}</h3>
+          <h4 class="title">{{item.title}}</h4>
           <p class="desc">{{item.title}}</p>
         </div>
       </div>
@@ -48,7 +48,7 @@ export default {
       },
       param: {
         offset: 0,
-        size: 2
+        size: 10
       },
       banner_list: [{
         url: 'javascript:',
@@ -107,8 +107,7 @@ export default {
         this.param.offset += this.param.size
       })
       getAdList(this.listId).then(response => {
-        let Json = response.data
-        Json.map(item => {
+        let Json = response.data.map(item => {
           return {
             url: '/article/detail/' + item.id,
             img: item.img,
@@ -135,10 +134,16 @@ export default {
     float: left;
     height: 60px;
     width: 60px;
-
+     
+    .img-area{
+      display: table-cell;
+      vertical-align:middle;
+      height: 60px;
+    }
     img{
       width: 60px;
       height: auto;
+      vertical-align:middle;
     }
   }
 
@@ -154,7 +159,8 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-style: 16px;
+    font-style: normal;
+    color: #474747;
   }
 
   .desc{

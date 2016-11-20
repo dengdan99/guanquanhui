@@ -1,27 +1,28 @@
 <template>
   <div class="bg-withe">
-      <tab :line-width=2 active-color='#fabf01' :index.sync="index">
+<!--       <tab :line-width=2 active-color='#fabf01' :index.sync="index">
         <tab-item class="vux-center" :selected="demo2 === item" v-for="item in titles" @click="demo2 = item">{{item}}</tab-item>
       </tab>
       <swiper :index.sync="index" :height="height" :show-dots="false" v-ref:swiper>
         
-        <swiper-item v-ref:Sitem1>
-          <div class="pary-area">
+        <swiper-item v-ref:Sitem1> -->
+          <div class="pary-area" v-if="paty.title">
             <div class="datail">
               <h2>{{paty.title}}</h2>
               <div class="desc">{{paty.abstract}}</div>
               <div class="content" id="article_content">{{{paty.content}}}</div>
-              <div class="p-info">
+              <!-- <div class="p-info">
                 <span>浏览 {{paty.click}}</span>
                 <span>收藏 {{paty.favorite}}</span>
-              </div>
+              </div> -->
             </div>
             <g-media :lists="artilceList"></g-media>
             <div class="zmPic">
-              <x-button type="primary" @click="showdialog=true">立即加入活动</x-button>
+              <x-button type="primary" @click="showdialog=true">立即参与</x-button>
+              <x-button type="primary" @click="share">分享到朋友圈</x-button>
             </div>
           </div>
-        </swiper-item>
+        <!-- </swiper-item>
         <swiper-item v-ref:Sitem2>
           <div class="qunzhu-area">
             <p class="zm-content">
@@ -31,13 +32,13 @@
             <p class="yellow-f">成为群主组织社群活动</p>
             <p class="yellow-f" style="margin-bottom: 20px">享有很多政府优惠策略</p>
             <div class="zmPic">
-              <x-button type="primary" @click="showdialog=true">立即加入活动</x-button>
+              <x-button type="primary" @click="showdialog=true">立即参与</x-button>
               <x-button type="primary" @click="showdialog=true">暂不参与，先看热闹</x-button>
             </div>
           </div>
         </swiper-item>
 
-      </swiper>
+      </swiper> -->
 
       <dialog :show.sync="showdialog" class="dialog-demo" :hide-on-blur="true">
         <group title="基本资料">
@@ -56,7 +57,7 @@
 <script>
 import { Tab, TabItem, Swiper, SwiperItem, XButton, GMedia, Dialog, Group, XInput } from '../../components'
 import { mapActions, mapGetters } from 'vuex'
-import { getAboutList } from '../../api'
+import { getAboutList, signupPaty, getPack } from '../../api'
 
 export default {
   components: {
@@ -91,6 +92,18 @@ export default {
         desc: item.address + item.abstract
       }))
     })
+    this.height = (document.body.clientHeight - 50 - 44) + 'px'
+    getPack().then(res => {
+      // const pack = res.data
+      // window.wx.config({
+      //   debug: true,
+      //   appId: pack.appId,
+      //   timestamp: pack.timestamp,
+      //   nonceStr: pack.nonceStr,
+      //   signature: pack.signature,
+      //   jsApiList: ['onMenuShareTimeline']
+      // })
+    })
   },
   data () {
     return {
@@ -121,8 +134,54 @@ export default {
       'hideTabbar',
       'getPaty'
     ]),
+    share () {
+      // var self = this
+      // window.wx.onMenuShareTimeline({
+      //   title: self.paty.title,
+      //   link: 'http://qd.hh.wangzhi.cc/#!/' + self.$route.path,
+      //   imgUrl: '',
+      //   success: function () {
+      //     alert('分享成功')
+      //   },
+      //   cancel: function () {
+      //   }
+      // })
+    },
     doPost () {
       this.showdialog = false
+      let postData = {
+        name: this.joinPost.name,
+        mobile: this.joinPost.mobile
+      }
+      if (postData.name === '') {
+        this.$vux.toast.show({
+          type: 'text',
+          text: '请填写姓名'
+        })
+        return false
+      }
+      if (postData.mobile === '') {
+        this.$vux.toast.show({
+          type: 'text',
+          text: '请手机号码'
+        })
+        return false
+      }
+
+      signupPaty(this.$route.params.id, postData).then(response => {
+        let json = response.data
+        if (json.result === true) {
+          this.$vux.toast.show({
+            type: 'success',
+            text: '报名成功'
+          })
+        } else {
+          this.$vux.toast.show({
+            type: 'text',
+            text: json.message
+          })
+        }
+      })
     }
     // getArticle () {
     //   this.$store.dispatch('getArticleList', this.itemOpation, true)
@@ -164,6 +223,7 @@ export default {
     h2{
       text-align: center;
       font-weight: normal;
+      margin-bottom: 20px;
     }
     .desc{
       border:solid 1px #7d7d7d;

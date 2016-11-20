@@ -1,18 +1,18 @@
 <template>
 <div>
-  <div class="od-head">
-    <div class="item">
-      <div class="title">标题</div>
-      <div class="status">状态</div>
-      <div class="zan">点赞</div>
-    </div>
-  </div>
-  <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" :height="height" @pullup:loading="load" keep-alive>
+  <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" height="-50px"  @pullup:loading="load" keep-alive>
   <div class="box2">
+    <div class="od-head">
+      <div class="item">
+        <div class="title">标题</div>
+        <div class="status">状态</div>
+        <div class="zan">点赞</div>
+      </div>
+    </div>
     <div class="item" v-for="li in list" @click="goto(li)" :class="($index + 1) % 2 === 0 ? 'odd' : ''">
-      <div class="title">{{li.ask.substring(0,8)+'...'}}</div>
+      <div class="title">{{li.ask.substring(0,6)+'...'}}</div>
       <div class="status">{{li.state_name}}</div>
-      <div class="zan"><div class="star iconfont">&#xe62e;<span class="badge">{{li.star}}</span></div><</div>
+      <div class="zan"><div class="star">★<span class="badge">{{li.star}}</span></div><</div>
     </div>
   </div>
   </scroller>
@@ -22,7 +22,7 @@
 <script>
 import { Scroller, Badge } from '../../components'
 import { go } from '../../libs/router'
-import { getOrderList } from '../../api'
+import { getorderMyListResource } from '../../api'
 // import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
@@ -30,17 +30,14 @@ export default {
     Badge
   },
   ready () {
-    getOrderList({
+    getorderMyListResource({
       offset: this.param.offset,
       size: this.param.size
     }).then(response => {
       const Json = response.data
       this.list = Json.results
       this.param.offset += this.param.size
-      console.log(this)
-      this.$children[0].reset()
     })
-    this.height = '-100px'
   },
   data () {
     return {
@@ -53,9 +50,8 @@ export default {
       },
       param: {
         offset: 0,
-        size: 15
-      },
-      height: '0px'
+        size: 10
+      }
     }
   },
   methods: {
@@ -63,7 +59,7 @@ export default {
       go('/order/view/' + item.id, this.$router)
     },
     load (uuid) {
-      getOrderList({
+      getorderMyListResource({
         offset: this.param.offset,
         size: this.param.size
       }).then(res => {
@@ -84,18 +80,7 @@ export default {
 
 <style scoped lang="less">
 .od-head{
-  .item{
-    color: #fff;
-    .title{
-      background: linear-gradient(to right, #22605a 0%,#39939f 15%);
-    }
-    .status{
-      background: linear-gradient(to right, #aa700b 0%,#b58b06 15%);
-    }
-    .zan{
-      background: linear-gradient(to right, #22605a 0%,#39939f 15%);
-    }
-  }
+  padding-bottom: 20px;
 }
 .item{
   height: 50px;
@@ -103,7 +88,7 @@ export default {
   overflow: hidden;
   .title{
     float: left;
-    width: 49%;
+    width: 39%;
     padding: 0 3%;
     background: linear-gradient(to right, #3c938b 0%,#61c3d0 15%);
   }
@@ -115,7 +100,7 @@ export default {
   }
   .zan{
     float: left;
-    width: 15%;
+    width: 25%;
     text-align: center;
     background: linear-gradient(to right, #3c938b 0%,#61c3d0 15%);
   }

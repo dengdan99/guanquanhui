@@ -1,32 +1,30 @@
 <template>
-<div>
-  
-  <group title="新的订单服务">
-    <x-input title="手机号码" :value.sync="mobile" name="mobile" placeholder="请输入手机号码" keyboard="number" is-type="china-mobile"></x-input>
-    <x-textarea :max="240" :value.sync="ask" name="description" placeholder="请输入您订单服务的内容 解答可输入 240个字"></x-textarea>
-  </group>
+<div class="o-bg">
 
   <div class="msg">
     <div class="item-l">
+      <div class="av"><img :src="userInfo.avator"></div>
+      <div class="msgarea">
+        <x-textarea :max="240" :height="120" :value.sync="ask" name="description" placeholder="请输入您订单服务的内容 解答可输入 240个字"></x-textarea>
+      </div>
+    </div>
+  </div>
+  <div class="msg">
+    <div class="item-r">
       <div class="av"><img src="/static/av_qun.jpg"></div>
       <div class="msgarea">
-        <p>主人，小观乐意为您解答，您觉得解答得好，请为我亮起5颗星哟！</p>
+        <p class="gray">主人，小观乐意为您解答，您觉得解答得好，请为我亮起5颗星哟！</p>
       </div>
     </div>
   </div>
 
-  <div class="warp-step">
-    <step :current="0" background-color='#fff'>
-      <step-item title="提交" description=""></step-item>
-      <step-item title="受理" description=""></step-item>
-      <step-item title="完成" description=""></step-item>
-    </step>
-  </div>
-  
-  <group title="">
+  <div class="bot">
+    <div class="mob-input">
+      <input class="inp" v-model="mobile"  placeholder="请输入手机号码" keyboard="number" />
+    </div>
     <x-button type="primary" @click="doPost">提交</x-button>
-  </group>
-  
+  </div>
+
 </div>
 </template>
 
@@ -34,7 +32,7 @@
 import { Group, XInput, XTextarea, XButton, Step, StepItem } from '../../components'
 import { newOrder } from '../../api'
 import { go } from '../../libs/router'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -46,7 +44,7 @@ export default {
     StepItem
   },
   ready () {
-
+    this.getUserInfo()
   },
   data () {
     return {
@@ -54,10 +52,16 @@ export default {
       mobile: ''
     }
   },
+  computed: {
+    ...mapGetters([
+      'userInfo'
+    ])
+  },
   methods: {
     ...mapActions([
       'showLoading',
-      'hideLoading'
+      'hideLoading',
+      'getUserInfo'
     ]),
     doPost () {
       this.showLoading()
@@ -72,7 +76,7 @@ export default {
             type: 'success',
             text: '提交成功'
           })
-          go('/order/index', this.$route)
+          go('/order/view/' + '1', this.$router)
         } else {
           this.$vux.toast.show({
             type: 'text',
@@ -86,45 +90,110 @@ export default {
 </script>
 
 <style scoped lang="less">
+.o-bg{
+  background-color: #fff000;
+  height: 100%;
+}
+.gray{
+  color: #ccc
+}
+
 .warp-step{
-  padding: 20px 5px;
+  padding: 20px 5px 0 5px;
 }
 .msg{
-  padding: 10px 5px;
+  padding: 40px 20px 0 20px;
+  .msgarea{
+    color: #000;
+    font-size: 14px;
+    background-color: #fff;
+    padding: 5px;
+    margin-left: 80px;
+    position: relative;
+    border: solid 3px #000;
+    border-radius: 10px;
+    // transform:skew(10deg,0deg);
+    min-height: 150px;
+  }
+  .msgarea:after{
+    position: absolute;
+    left: 50px;
+    bottom: -36px;
+    content: "";
+    border-color: #fff transparent transparent transparent;
+    border-style: solid;
+    border-width: 20px;
+    height: 0;
+    width: 0;
+    transform:skew(50deg, 10deg);
+  }
+  .msgarea:before{
+    position: absolute;
+    left: 53px;
+    bottom: -39px;
+    content: "";
+    border-color: #000 transparent transparent transparent;
+    border-style: solid;
+    border-width: 19px;
+    height: 0;
+    width: 0;
+    transform:skew(47deg, 2deg);
+  }
   .item-l{
     position: relative;
     .av{
       margin-top: 5px;
-      height: 30px;
-      width: 30px;
+      height: 55px;
+      width: 55px;
+      border-radius: 100%;
       overflow: hidden;
       float: left;
       img{
-        width: 30px;
+        width: 55px;
         height: auto;
       }
     }
-    .msgarea:after{
-      position: absolute;
-      left: -8px;
-      top: 10px;
-      content: "";
-      width: 0;
-      height: 0;
-      border-top: 5px solid transparent;
-      border-right: 8px solid #e5b723;
-      border-bottom: 5px solid transparent;
+  }
+  .item-r{
+    position: relative;
+    .av{
+      margin-top: 5px;
+      height: 55px;
+      width: 55px;
+      border-radius: 100%;
+      overflow: hidden;
+      float: right;
+      img{
+        width: 55px;
+        height: auto;
+      }
     }
     .msgarea{
-      color: #fff;
-      font-size: 14px;
-      background-color: #e5b723;
-      padding: 5px;
-      margin-left: 40px;
-      position: relative;
-      border: solid 1px #e5b723;
-      border-radius: 5px;
+      margin-left: 0;
+      margin-right: 80px;
+      min-height: 80px;
     }
   }
+}
+.bot{
+  width: 250px;
+  margin: 0 auto;
+  text-align: center;
+  .mob-input{
+    margin: 40px 0 20px 0;
+  }
+  .inp{
+    border:solid 3px #000;
+    border-radius: 3px;
+    padding: 10px 15px;
+    width: 80%;
+  }
+}
+.weui_btn_primary{
+  border: solid #000 2px;
+  background: linear-gradient(to bottom, #ccc 0%,#000 100%);
+  color: yellow;
+  width: 50%;
+  line-height: 28px;
 }
 </style>

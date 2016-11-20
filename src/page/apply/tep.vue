@@ -2,24 +2,24 @@
 <div>
   <div class="top-bg"><img src="/static/top-bg.jpg"></div>
   <div class="al-conent">
-    <div class="tep1 tep">
-      <div class="img iconfont">&#xe7cd;</div>
+    <div class="tep1 tep" v-show="status === -2 || status === -1">
+      <div class="img iconfont">&#xe649;</div>
       <p class="red">主人， 您还不是志愿者</p>
       <p class="gray">加入我们吧踏上新的路程</p>
-      <x-button type="primary" @click="agree">加入社群</x-button>
+      <x-button type="primary" @click="agree">申请成为志愿者</x-button>
     </div>
 
-    <!-- <div class="tep2 tep">
+    <div class="tep2 tep" v-show="status === 0">
       <div class="weui_btn_primary shenhezhong">审核中</div>
       <p class="gray">您的志愿者申请正在审核中</p>
-    </div> -->
+    </div>
 
-    <!-- <div class="tep1 tep">
+    <div class="tep1 tep" v-show="status === 1">
       <div class="img iconfont">&#xe7cd;</div>
       <p>主人， 您已经成为了一名光荣的志愿者</p>
       <x-button class="bt10" type="primary" @click="goto('/user/index')">参与更多活动</x-button>
       <x-button type="primary" @click="goto('/user/index')">查看志愿者积分榜</x-button>
-    </div> -->
+    </div>
 
   </div>
   <div class="bottom-bg"><img src="/static/bottom-bg.jpg"></div>
@@ -29,6 +29,8 @@
 <script>
 import { Group, XButton } from '../../components'
 import { go } from '../../libs/router'
+import { getCookie } from '../../libs/authService'
+import { volunteerState } from '../../api'
 // import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -37,11 +39,13 @@ export default {
     XButton
   },
   ready () {
-
+    volunteerState(getCookie('uid')).then(response => {
+      this.status = response.data.state
+    })
   },
   data () {
     return {
-
+      status: -2
     }
   },
   methods: {

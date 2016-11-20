@@ -7,21 +7,19 @@
         <x-header :left-options="leftOptions" :transition="headerTransition" :title="title" @on-click-title="scrollTop"></x-header>
       </div> -->
       <!--default slot-->
-      <router-view
-      :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')"
-      ></router-view>
+      <router-view></router-view>
       <!--bottom slot-->
       <tabbar class="vux-demo-tabbar" icon-class="vux-center" v-show="showTabbar" slot="bottom">
-        <tabbar-item :selected="isMenu1" :menu-data="menuData1">
-          <span class="demo-icon-22" slot="icon">&#xe643;</span>
+        <tabbar-item :selected="isMenu1" :show="item1Show" :menu-data="menuData1" @on-item-click="item1ShowClick">
+          <span class="icon-yanjing iconfont" style="font-size:18px;" slot="icon"></span>
           <span slot="label">观视野</span>
         </tabbar-item>
-        <tabbar-item :selected="isDemo" :menu-data="menuData2">
-          <span class="demo-icon-22" slot="icon">&#xe65a;</span>
+        <tabbar-item :selected="isDemo" :show="item2Show" :menu-data="menuData2" @on-item-click="item2ShowClick">
+          <span class="icon-taoxin iconfont" style="font-size:18px;" slot="icon"></span>
           <span slot="label">微服务</span>
         </tabbar-item>
-        <tabbar-item :selected="route.path === '/user/index'" :link="link3">
-          <span class="demo-icon-22" slot="icon">&#xe66b;</span>
+        <tabbar-item :selected="route.path === '/user/index'" :link="link3" @on-item-click="item3ShowClick">
+          <span class="icon-ren-copy iconfont" style="font-size:24px;" slot="icon"></span>
           <span slot="label">关注我</span>
         </tabbar-item>
       </tabbar>
@@ -48,6 +46,8 @@ export default {
   store: store,
   data () {
     return {
+      item1Show: false,
+      item2Show: false,
       routerTransition: {
         forward: 'slideRL',
         back: 'slideLR'
@@ -73,6 +73,10 @@ export default {
           link: '/order/index'
         },
         {
+          text: '在线互动',
+          link: '/hudong/index'
+        },
+        {
           text: '社群大厦',
           link: '/dasha/index'
         }
@@ -81,12 +85,6 @@ export default {
     }
   },
   ready () {
-    // this.login(9, 'demo')
-    if (/login/.test(this.$route.path)) {
-    // 访问的是登录页面
-    } else {
-      this.cheackUser()
-    }
     getAllList().then(response => {
       const Json = response.data
       this.menuData1 = Json.map(item => ({
@@ -99,17 +97,23 @@ export default {
     scrollTop () {
       this.$refs.viewBox.$els.viewBoxBody.scrollTop = 0
     },
-    cheackUser () {
-      if (!auth.isLogin()) {
-        auth.saveCookie('startPage', this.$route.path)
-        window.location.href = 'http://hh.wangziqing.cc/api/wechat/oauth2'
-      }
-    },
     login (uid, token) {
       auth.saveCookie('token', token)
       auth.saveCookie('uid', uid)
     },
     getPath (mode) {
+    },
+    item1ShowClick () {
+      this.item1Show = !this.item1Show
+      this.item2Show = false
+    },
+    item2ShowClick () {
+      this.item2Show = !this.item2Show
+      this.item1Show = false
+    },
+    item3ShowClick () {
+      this.item1Show = false
+      this.item2Show = false
     }
   },
   computed: {
@@ -150,6 +154,9 @@ html, body {
   width: 100%;
   overflow-x: hidden;
 }
+.weui_tabbar_label{
+  font-size: 16px;
+}
 /* v-r-transition, default is {forward: 'forward', back: 'back'}*/
 .forward-enter, .forward-leave {
   transform: translate3d(-100%, 0, 0);
@@ -165,10 +172,10 @@ html, body {
 .weui_tabbar.vux-demo-tabbar {
   backdrop-filter: blur(10px);
   background-color: none;
-  background: rgba(247, 247, 250, 0.5);
+  background: #fff;
 }
-.weui_bar_item_on .demo-icon-22 {
-  color: #b39020;
+.weui_bar_item_on .iconfont {
+  color: #fff;
 }
 .vux-demo-tabbar .weui_tabbar_item.weui_bar_item_on .vux-demo-tabbar-icon-home {
   color: rgb(53, 73, 94);

@@ -2,43 +2,67 @@
   <div>
     <div class="index-header">
       <div class="userInfo">
-        <img :src="userInfo.avator" class="av_img">
+        <img :src="userInfo.avator === '' ? '/static/def-av.jpg' : userInfo.avator" class="av_img">
         <div class="nickName">{{userInfo.nickname}}</div>
       </div>
-      <flexbox class="vux-1px-tb" :gutter="0">
-        <flexbox-item class="vux-1px-r">
+
+      <flexbox :gutter="0">
+        <flexbox-item>
           <a href="javascript:;" @click="goUrl('/user/info')" class="item item1">
-            <div class="img iconfont">&#xe7af;</div>
+            <div class="img iconfont">&#xe68b;</div>
             <div class="text">个人档案 </div>
           </a>
         </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item item2" href="javascript:;">
-            <div class="img iconfont">&#xe652;</div>
+        <flexbox-item>
+          <a class="item item2" href="javascript:;" @click="goUrl('/group/list')" >
+            <div class="img iconfont">&#xe63e;</div>
             <div class="text">兴趣小组</div>
           </a>
         </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item item3" href="javascript:;" @click="goUrl('/order/index')">
-            <div class="img iconfont">&#xe8db;</div>
+        <flexbox-item>
+          <a class="item item3" href="javascript:;" @click="goUrl('/user/myorder')">
+            <div class="img iconfont">&#xe637;</div>
             <div class="text">我的订单</div>
           </a>
         </flexbox-item>
         <flexbox-item>
           <a class="item item4" href="javascript:;" @click="goUrl('/apply/tep')">
-            <div class="img iconfont">&#xe7cd;</div>
+            <div class="img iconfont">&#xe649;</div>
             <div class="text">申请志愿者</div>
           </a>
         </flexbox-item>
+      </flexbox>
+
+      <flexbox :gutter="0">
         <flexbox-item>
-          <a class="item item4" href="javascript:;">
-            <div class="img iconfont">&#xea51;</div>
+          <a class="item item4" href="javascript:;" @click="goUrl('/user/rank')">
+            <div class="img iconfont">&#xe6f3;</div>
             <div class="text">积分榜</div>
           </a>
         </flexbox-item>
+        <flexbox-item>
+          <a class="item item2" href="javascript:;" @click="goUrl('/paty/detail/2')">
+            <div class="img iconfont">&#xe678;</div>
+            <div class="text">最新活动</div>
+          </a>
+        </flexbox-item>
+        <flexbox-item>
+          <a class="item item3" href="javascript:;" @click="goUrl('/toupiao/detail/' + latest.id)">
+            <div class="img iconfont">&#xe639;</div>
+            <div class="text">最新投票</div>
+          </a>
+        </flexbox-item>
+        <flexbox-item>
+          <a class="item item4" href="javascript:;" @click="goUrl('/group/list')">
+            <div class="img iconfont">&#xe708;</div>
+            <div class="text">我要当群主</div>
+          </a>
+        </flexbox-item>
       </flexbox>
+
     </div>
-    <g-media :lists="artilceList"></g-media>
+
+    <article-part></article-part>
 
     <div class="rule-box">
       <h3>志愿者积分兑换流程及规则</h3>
@@ -54,6 +78,7 @@
 
 <script>
 import { Flexbox, FlexboxItem, GMedia } from '../../components'
+import ArticlePart from '../index/ArticlePart'
 import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
 
@@ -61,7 +86,8 @@ export default {
   components: {
     Flexbox,
     FlexboxItem,
-    GMedia
+    GMedia,
+    ArticlePart
   },
   ready () {
     this.getUserInfo()
@@ -101,6 +127,12 @@ export default {
     ]),
     goUrl (link) {
       go(link, this.$router)
+    },
+    gotop (item) {
+      go('/dasha/club/' + item.id, this.$router)
+    },
+    gotoToupiao (item) {
+      go('/dasha/club/' + item.id, this.$router)
     }
   }
 }
@@ -145,7 +177,7 @@ export default {
   background-position: center;
 }
 .img.iconfont {
-  font-size: 36px;
+  font-size: 28px;
 }
 .text {
   font-size: 10px;
@@ -179,6 +211,61 @@ export default {
     p{
       margin-bottom: 10px
     }
+  }
+}
+
+.zt_list{
+  padding: 5px 10px;
+  background: linear-gradient(to bottom, #fff 50%,#ccc 100%);
+
+  .pic{
+    overflow: hidden;
+    float: left;
+    height: 60px;
+    width: 60px;
+     
+    .img-area{
+      display: table-cell;
+      vertical-align:middle;
+      height: 60px;
+    }
+    img{
+      width: 60px;
+      height: auto;
+      vertical-align:middle;
+    }
+  }
+
+  .text{
+    height: 60px;
+    position: relative;
+    margin-left: 70px;
+  }
+
+  .title{
+    line-height: 30px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-style: normal;
+    text-align: left;
+    font-size: 16px;
+    .join_num{
+      float: right;
+      font-size: 12px;
+      color: #ccc
+    }
+  }
+
+  .desc{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 30px;
+    height: 30px;
+    color: #aaa;
+    font-size: 14px;
   }
 }
 </style>

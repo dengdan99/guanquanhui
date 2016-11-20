@@ -71,7 +71,7 @@ export default {
 }
 
 .vux-step-item-tail-finish {
-  background: #09bb07 none repeat scroll 0 0;
+  background: #fabf01 none repeat scroll 0 0;
 }
 
 .vux-step-item-tail-process, .vux-step-item-tail-wait {
@@ -112,9 +112,9 @@ export default {
 }
 
 .vux-step-item-head-process .vux-step-item-head-inner{
-  border: 1px solid #09bb07;
+  border: 1px solid #e17c72;
   color: #FFF;
-  background: #09bb07 none repeat scroll 0 0;
+  background: #e17c72 none repeat scroll 0 0;
 }
 
 .vux-step-item-head-wait .vux-step-item-head-inner {

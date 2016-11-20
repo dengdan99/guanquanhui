@@ -24,6 +24,8 @@ export default {
       isAdd: false,
       itemsPerPage: this.param.size,
       param: this.param
+    }).then(res => {
+      this.param.offset += this.param.size
     })
   },
   data () {
@@ -40,7 +42,7 @@ export default {
       },
       param: {
         offset: 0,
-        size: 1
+        size: 10
       }
     }
   },
@@ -60,6 +62,7 @@ export default {
         itemsPerPage: this.param.size,
         param: this.param
       }).then(() => {
+        this.param.offset += this.param.size
         this.$broadcast('pulldown:reset', uuid)
       })
     },

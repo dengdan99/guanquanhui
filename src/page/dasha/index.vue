@@ -3,7 +3,7 @@
   <tab :line-width=2 active-color='#fabf01' :index.sync="index">
     <tab-item class="vux-center" :selected="currentTitle === item" v-for="item in titles" @click="currentTitle = item">{{item}}</tab-item>
   </tab>
-  <swiper :index.sync="index" :aspect-ratio="20" :show-dots="false">
+  <swiper :index.sync="index" :height="height" :show-dots="false">
 
     <swiper-item>
       <div class="item-list">
@@ -22,14 +22,14 @@
         </a>
       </div>
     </swiper-item>
-    <swiper-item>
+    <!-- <swiper-item>
       <div class="item-list">
         <a href="javascript:;" @click="goUrl(item)" class="item" v-for="item in commList.list2">
           <div class="img"><img :src="item.logo" class="logo" /></div>
           <div class="text">{{item.name}}</div>
         </a>
       </div>
-    </swiper-item>
+    </swiper-item> -->
   </swiper>
 </div>
 </template>
@@ -50,11 +50,13 @@ export default {
   },
   ready () {
     this.getCommunityList()
+    this.height = (document.body.clientHeight - 50 - 44) + 'px'
   },
   data () {
     return {
+      height: '500px',
       index: 0,
-      titles: ['企业', '社群', '商家'],
+      titles: ['企业', '社群'],
       currentTitle: '企业'
     }
   },

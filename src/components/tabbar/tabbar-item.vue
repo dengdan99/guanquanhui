@@ -7,7 +7,7 @@
     <p class="weui_tabbar_label">
       <slot name="label"></slot>
     </p>
-    <div class="vux-sec-menu iconfont" v-show="show" icon="&#xe6c9;">
+    <div class="vux-sec-menu iconfont" v-show="show">
       <a href="javascript:;" v-link="menu.link" v-for="menu in menuData" class="vux-sec-menu-lk">{{menu.text}}</a>
     </div>
   </div>
@@ -52,9 +52,6 @@ export default {
   },
   methods: {
     onItemClick () {
-      if (this.hasMenu === true) {
-        this.show = !this.show
-      }
       this.$emit('on-item-click')
     }
   }
@@ -93,6 +90,9 @@ export default {
 }
 .vux-sec-menu .vux-sec-menu-lk:last-child{
   border: none;
+}
+.weui_bar_item_on{
+  background: linear-gradient(to bottom, #fce188 0%,#d1a30f 100%);
 }
 @keyframes popInUp {
   from {

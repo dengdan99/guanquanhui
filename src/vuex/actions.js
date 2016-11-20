@@ -54,7 +54,7 @@ export const getArticleList = ({ commit }, options) => {
 }
 
 export const getDic = ({commit}) => {
-  api.getDic().then(response => {
+  return api.getDic().then(response => {
     const json = response.data
     Object.keys(json).forEach(key => {
       json[key] = Object.keys(json[key]).map(k => {

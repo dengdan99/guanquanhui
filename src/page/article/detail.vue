@@ -1,35 +1,41 @@
 <template>
   <div class="bg-withe">
     <div class="pary-area">
-      <div class="datail">
+      <div class="datail" v-if="isOk">
         <h2>{{data.title}}</h2>
         <div class="pic"><img :src="data.image" /></div>
         <div class="content" id="article_content">{{{data.content}}}</div>
-        <p>创建时间： {{data.created_at}}</p>
-        <p>最后修改： {{data.updated_at}}</p>
       </div>
     </div>
+    <article-part></article-part>
   </div>
 </template>
 
 <script>
 // import { Tab, TabItem, Swiper, SwiperItem, XButton, GMedia, Dialog, Group, XInput } from '../../components'
 // import { mapActions, mapGetters } from 'vuex'
+import ArticlePart from '../index/ArticlePart'
 import { getArticle } from '../../api'
 export default {
   components: {
+    ArticlePart
   },
   ready () {
     this.loading(this.$route.params.id)
   },
+  route: {
+    canReuse: false
+  },
   data () {
     return {
+      isOk: false,
       data: {}
     }
   },
   methods: {
     loading (id) {
       getArticle(id).then(response => {
+        this.isOk = true
         this.data = response.data
       })
     }
@@ -76,6 +82,8 @@ export default {
       text-align: center;
       font-weight: normal;
       margin-bottom: 20px;
+      border-bottom: solid 1px #ccc;
+      padding-bottom: 10px;
     }
     .pic img{
       width: 100%;

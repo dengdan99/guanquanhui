@@ -1,6 +1,6 @@
 <template>
   <div class="vux-slider">
-    <div class="vux-swiper" :style="{height: xheight}">
+    <div class="vux-swiper" :style="{height: height}">
       <slot></slot>
       <div class="vux-swiper-item" v-for="(index, item) in list" @click="clickListItem(item)" :data-index="index">
         <a href="javascript:">

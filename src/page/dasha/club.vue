@@ -9,6 +9,7 @@
     </div>
     <div class="zmPic">
       <x-button type="primary" @click="showdialog=true">立即加入社群</x-button>
+      <x-button type="primary" @click="showdialog2=true">我要当群主</x-button>
     </div>
 
     <dialog :show.sync="showdialog" class="dialog-demo" :hide-on-blur="true">
@@ -22,13 +23,26 @@
           </div>
         </group>
       </dialog>
+
+      <dialog :show.sync="showdialog2" class="dialog-demo" :hide-on-blur="true">
+        <group title="基本资料">
+          <x-input title="姓名" :value.sync="joinBossPost.name" v-ref:nameboss :required="true" placeholder="请输入姓名" is-type="china-name"></x-input>
+          <x-input title="手机号码" :value.sync="joinBossPost.mobile" v-ref:mobileboss :required="true" placeholder="请输入手机号码" keyboard="number" is-type="china-mobile"></x-input>
+        </group>
+        <group title="">
+          <div class="zmPic">
+            <x-button type="primary" @click="doPostBoss">我要当群主</x-button>
+          </div>
+        </group>
+      </dialog>
+
   </div>
 </template>
 
 <script>
 import { XButton, Dialog, Group, XInput } from '../../components'
 // import { mapActions, mapGetters } from 'vuex'
-import { getClub, joinClub } from '../../api'
+import { getClub, joinClub, clubBoss } from '../../api'
 export default {
   components: {
     XButton,
@@ -43,7 +57,12 @@ export default {
     return {
       data: {},
       showdialog: false,
+      showdialog2: false,
       joinPost: {
+        name: '',
+        mobile: ''
+      },
+      joinBossPost: {
         name: '',
         mobile: ''
       }
@@ -53,6 +72,44 @@ export default {
     loading (id) {
       getClub(id).then(response => {
         this.data = response.data
+      })
+    },
+    doPostBoss () {
+      this.$refs.nameboss.validate()
+      this.$refs.nameboss.getError()
+      this.$refs.mobileboss.validate()
+      this.$refs.mobileboss.getError()
+
+      if (!this.$refs.nameboss.valid) {
+        this.$vux.toast.show({
+          type: 'text',
+          text: this.$refs.name.firstError
+        })
+        return false
+      }
+      if (!this.$refs.mobileboss.valid) {
+        this.$vux.toast.show({
+          type: 'text',
+          text: this.$refs.mobile.firstError
+        })
+        return false
+      }
+      // $refs.name.valid
+      // $refs.mobile.valid
+      clubBoss(this.$route.params.id, this.joinBossPost).then(response => {
+        const json = response.data
+        if (json.result && json.result === true) {
+          this.$vux.toast.show({
+            type: 'success',
+            text: '申请群主成功'
+          })
+        } else {
+          this.$vux.toast.show({
+            type: 'warn',
+            text: json.message
+          })
+        }
+        this.showdialog2 = false
       })
     },
     doPost () {

@@ -1,8 +1,34 @@
 <template>
   <div class="bg-gary">
-    <scroller lock-x use-pulldown :pulldown-config="pulldownConfig" @pulldown:loading="load">
+    <scroller lock-x use-pulldown :pulldown-config="pulldownConfig" @pulldown:loading="load" v-ref:scroller>
       <div class="box1 warp-bottom">
-        <g-panel v-for="item in list" :info="item" @click="goto(item)"></g-panel>
+        
+        <div class="weui_panel g-panel" v-for="item in list">
+          <div class="weui_panel_hd g-panel-hd"><span>{{item.date}}</span></div>
+          <div class="weui_panel_bd g-panel-bd">
+            <div class="weui_media_box weui_media_text">
+
+              <template v-for="li in item.list">
+              <div class="weui_media_desc" v-if="$index === 0">
+                <div class="fouce-pic">
+                  <img class="weui_media_pic" :src="li.image" />
+                  <div class="pic-title">{{li.title}}</div>
+                </div>
+              </div>
+
+              <div class="ali" v-if="$index !== 0">
+                 <div class="s-pic">
+                   <img :src="li.image" height="50" width="50" />
+                 </div>
+                  <span class="s-tet">{{li.title}}</span>
+              </div>
+              </template>
+
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </scroller>
   </div>
@@ -10,7 +36,7 @@
 
 <script>
 import { GPanel, Cell, Scroller } from '../../components'
-import { getHomeAritcle } from '../../api'
+import { getArticleDates } from '../../api'
 // import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
 
@@ -21,18 +47,11 @@ export default {
     Scroller
   },
   ready () {
-    getHomeAritcle(this.param).then(response => {
+    getArticleDates(this.param).then(response => {
       const Json = response.data.results
-      console.log(Json)
-      this.list = Json.map(item => ({
-        id: item.id,
-        active_time: item.updated_at,
-        title: item.title,
-        abstract: item.abstract,
-        image: item.image,
-        from: item.tag
-      }))
+      this.list = Json
       this.param.offset += this.param.size
+      this.$refs.scroller.reset()
     })
   },
   data () {
@@ -50,24 +69,16 @@ export default {
       },
       param: {
         offset: 0,
-        size: 1
+        size: 2
       }
     }
   },
   methods: {
     load (uuid) {
-      getHomeAritcle(this.param).then(response => {
+      getArticleDates(this.param).then(response => {
         const Json = response.data.results
-        let _list = Json.map(item => ({
-          id: item.id,
-          active_time: item.updated_at,
-          title: item.title,
-          abstract: item.abstract,
-          image: item.image,
-          from: item.tag
-        }))
+        let _list = Json
         this.list = [..._list, ...this.list]
-        console.log(this.list)
         this.param.offset += this.param.size
         this.$broadcast('pulldown:reset', uuid)
       })
@@ -81,4 +92,39 @@ export default {
 </script>
 
 <style scoped lang="less">
+.weui_media_box{
+  padding: 0;
+}
+.weui_media_desc{
+  padding: 10px;
+}
+.fouce-pic{
+  position: relative;
+}
+.weui_media_desc .pic-title{
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 96%;
+  line-height: 25px;
+  max-height: 50px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0 2%;
+  font-size: 14px;
+}
+.weui_panel .ali{
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  border-top: solid #ccc 1px;
+  min-height: 50px;
+  .s-pic{
+    float: right;
+    height: 50px;
+    width: 50px;
+  }
+  .s-tet{
+  }
+}
 </style>

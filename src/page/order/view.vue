@@ -1,32 +1,50 @@
 <template>
-<div>
-
-  <div class="msg">
-    <div class="item-r">
-      <div class="av"><img src="/static/demo/comment/2.jpg"></div>
-      <div class="msgarea">
-        <p>{{order.ask}}</p>
+<div class="order-bg">
+  <div class="o-bg">
+    <div class="msg">
+      <div class="item-l">
+        <div class="av"><img :src="order.avator === '' ? '/static/def-av.jpg' : order.avator"></div>
+        <div class="msgarea">
+          <p>{{order.ask}}</p>
+        </div>
       </div>
     </div>
-    <div class="item-l">
-      <div class="av"><img src="/static/av_qun.jpg"></div>
-      <div class="msgarea">
-        <p>主人，小观乐意为您解答，您觉得解答得好，请为我亮起5颗星哟！</p>
+    <div class="msg">
+      <div class="item-r">
+        <div class="av"><img src="/static/av_qun.jpg"></div>
+        <div class="msgarea">
+          <p :class="order.finished_at !== 0 ? 'gray' : ''">{{order.answer}}</p>
+        </div>
       </div>
     </div>
   </div>
-  <div class="warp-step">
-    <step :current="1" background-color="#fff" gutter="2px">
-      <step-item title="提交" description="2016-10-10"></step-item>
-      <step-item title="受理" description="2016-10-11"></step-item>
-      <step-item title="完成" description="2016-10-11"></step-item>
-    </step>
+  <img src="/static/order-bg.jpg" class="h-ling" />
+  <div class="order-bot" v-if="typeof order.state !== 'undefined'">
+    <div class="warp-step">
+      <img :src="'/static/tep-' + order.state + '.jpg'" class="tep-bg" />
+      <div class="step">
+        <div class="t1">
+          <p>您的订单<br>已经提交</p>
+          <p class="time">{{order.created_at}}</p>
+        </div>
+        <div class="t2" v-show="order.accepted_at !== 0">
+          <p class="time">{{order.accepted_at}}</p>
+          <p>您的订单<br>已经受理</p>
+        </div>
+        <div class="t3" v-show="order.finished_at !== 0">
+          <p>您的订单<br>已经完成</p>
+          <p class="time">{{order.finished_at}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="star_area">
+      <rater :value.sync="star" class="iconfont" slot="value" star="&#xe62e;" :disabled="star_dis"></rater>
   </div>
 
-  <group title="">
-    <cell title="评分">
-      <rater :value.sync="order.star" :disabled="star_dis" slot="value" star="☻" active-color="#FF9900" :margin="4"></rater>
-    </cell>
+  <div class="bottt" v-show="!star_dis">
+    <x-button type="primary" @click="doZan">点赞</x-button>
+  </div>
   </group>
 
 </div>
@@ -34,8 +52,9 @@
 
 <script>
 import { Group, XInput, XTextarea, XButton, Step, StepItem, Cell, Rater } from '../../components'
-import { getOrder } from '../../api'
-// import { mapActions, mapGetters } from 'vuex'
+import { getOrder, starOrder } from '../../api'
+import { mapActions, mapGetters } from 'vuex'
+import { go } from '../../libs/router'
 
 export default {
   components: {
@@ -53,10 +72,14 @@ export default {
   },
   data () {
     return {
+      star: 0,
       order: {}
     }
   },
   computed: {
+    ...mapGetters([
+      'userInfo'
+    ]),
     star_dis () {
       if (this.order.star === 0) {
         return false
@@ -66,10 +89,36 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     loading (id) {
       getOrder(id).then(response => {
         const Json = response.data
         this.order = Json
+        this.star = Json.star
+      })
+    },
+    doZan () {
+      const val = this.star
+      if (val === 0) return
+      starOrder(this.$route.params.id, {
+        star: val
+      }).then(res => {
+        const Json = res.data
+        if (Json.result !== true) {
+          this.$vux.toast.show({
+            type: 'text',
+            text: Json.message
+          })
+          return false
+        } else {
+          this.$vux.toast.show({
+            type: 'success',
+            text: '点赞成功'
+          })
+          go('/order/index', this.$router)
+        }
       })
     }
   }
@@ -77,82 +126,173 @@ export default {
 </script>
 
 <style scoped lang="less">
+.o-bg{
+  background-color: #fff000;
+  padding-bottom: 20px;
+}
+.gray{
+  color: #ccc;
+}
+
 .warp-step{
-  padding: 20px 5px;
+  position: relative;
+  color: #fff;
+  font-size: 12px;
+  .tep-bg{
+    width: 100%;
+    height: auto;
+  }
+  .step{
+    position: absolute;
+    display: flex;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    .t1{
+      width: 33%;
+      padding-left: 15px;
+      .time{
+        color: #fabf01;
+      }
+    }
+    .t2{
+      width: 33%;
+      padding-top: 70px;
+      .time{
+        color: #e47063;
+      }
+    }
+    .t3{
+      width: 33%;
+      .time{
+        color: #a2d1a3;
+      }
+    }
+  }
 }
 .msg{
-  padding: 10px 5px;
+  padding: 40px 20px 0 20px;
+  .msgarea{
+    color: #000;
+    font-size: 14px;
+    background-color: #fff;
+    padding: 5px;
+    margin-left: 80px;
+    position: relative;
+    border: solid 3px #000;
+    border-radius: 5px;
+    // transform:skew(10deg,0deg);
+    min-height: 50px;
+  }
+  .msgarea:after{
+    position: absolute;
+    left: 50px;
+    bottom: -36px;
+    content: "";
+    border-color: #fff transparent transparent transparent;
+    border-style: solid;
+    border-width: 20px;
+    height: 0;
+    width: 0;
+    transform:skew(50deg, 10deg);
+  }
+  .msgarea:before{
+    position: absolute;
+    left: 53px;
+    bottom: -39px;
+    content: "";
+    border-color: #000 transparent transparent transparent;
+    border-style: solid;
+    border-width: 19px;
+    height: 0;
+    width: 0;
+    transform:skew(47deg, 2deg);
+  }
   .item-l{
-    margin-bottom: 10px;
     position: relative;
     .av{
       margin-top: 5px;
-      height: 45px;
-      width: 45px;
+      height: 55px;
+      width: 55px;
+      border-radius: 100%;
       overflow: hidden;
       float: left;
       img{
-        width: 45px;
+        width: 55px;
         height: auto;
       }
-    }
-    .msgarea:after{
-      position: absolute;
-      left: -8px;
-      top: 10px;
-      content: "";
-      width: 0;
-      height: 0;
-      border-top: 5px solid transparent;
-      border-right: 8px solid #e5b723;
-      border-bottom: 5px solid transparent;
-    }
-    .msgarea{
-      color: #fff;
-      font-size: 14px;
-      background-color: #e5b723;
-      padding: 5px;
-      margin-left: 60px;
-      position: relative;
-      border: solid 1px #e5b723;
-      border-radius: 5px;
     }
   }
   .item-r{
-    margin-bottom: 10px;
     position: relative;
     .av{
       margin-top: 5px;
-      height: 45px;
-      width: 45px;
+      height: 55px;
+      width: 55px;
+      border-radius: 100%;
       overflow: hidden;
       float: right;
       img{
-        width: 45px;
+        width: 55px;
         height: auto;
       }
     }
-    .msgarea:after{
-      position: absolute;
-      right: -8px;
-      top: 10px;
-      content: "";
-      width: 0;
-      height: 0;
-      border-top: 5px solid transparent;
-      border-left: 8px solid #e5b723;
-      border-bottom: 5px solid transparent;
-    }
     .msgarea{
-      color: #fff;
-      font-size: 14px;
-      background-color: #e5b723;
-      padding: 5px;
-      margin-right: 60px;
-      position: relative;
-      border: solid 1px #e5b723;
-      border-radius: 5px;
+      margin-left: 0;
+      margin-right: 80px;
+      min-height: 80px;
     }
   }
+}
+.bot{
+  width: 250px;
+  margin: 0 auto;
+  text-align: center;
+  .mob-input{
+    margin: 40px 0 20px 0;
+  }
+  .inp{
+    border:solid 3px #000;
+    border-radius: 3px;
+    padding: 10px 15px;
+    width: 80%;
+  }
+}
+.h-ling{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.order-bg{
+  background-color: #222222;
+  height: 100%;
+  .star_area{
+    text-align: center;
+  }
+}
+.order-bot{
+  padding: 20px 10px;
+}
+.bottt{
+  width: 250px;
+  margin: 0 auto;
+  text-align: center;
+  .mob-input{
+    margin: 40px 0 20px 0;
+  }
+  .inp{
+    border:solid 3px #000;
+    border-radius: 3px;
+    padding: 10px 15px;
+    width: 80%;
+  }
+}
+.weui_btn_primary{
+  border: solid #000 2px;
+  background: linear-gradient(to bottom, #ccc 0%,#000 100%);
+  color: yellow;
+  width: 50%;
+  line-height: 28px;
 }
 </style>

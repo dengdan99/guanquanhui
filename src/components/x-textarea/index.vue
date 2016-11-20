@@ -14,7 +14,7 @@
       v-model="value"
       :style="textareaStyle"
       :maxlength="max"></textarea>
-      <div class="weui_textarea_counter" v-show="showCounter && max"><span>{{count}}</span>/{{max}}</div>
+      <div class="weui_textarea_counter" v-show="showCounter && max">主人您还能输入 <span style="color:red">{{max - count}}</span> 字</div>
     </div>
   </div>
 </template>

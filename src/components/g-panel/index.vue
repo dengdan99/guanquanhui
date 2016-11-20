@@ -66,6 +66,12 @@ export default {
   vertical-align: top;
 }
 .weui_media_desc{
-  margin-bottom: 2px
+  margin-bottom: 8px;
+}
+.weui_media_box .weui_media_desc{
+  line-height: 1.7
+}
+.weui_media_box.weui_media_text .weui_media_info{
+  margin-top: 2px;
 }
 </style>

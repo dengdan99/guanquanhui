@@ -32,8 +32,7 @@ import store from './vuex'
 import * as auth from './libs/authService'
 // import { go } from './libs/router'
 import { Tabbar, TabbarItem, Loading, ViewBox, XHeader } from './components'
-import { mapGetters } from 'vuex'
-import { getAllList } from './api'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -53,12 +52,6 @@ export default {
         back: 'slideLR'
       },
       link1: '/',
-      menuData1: [
-        {
-          text: '留白',
-          link: '/baike/index'
-        }
-      ],
       menuData2: [
         {
           text: '办事百科',
@@ -85,15 +78,12 @@ export default {
     }
   },
   ready () {
-    getAllList().then(response => {
-      const Json = response.data
-      this.menuData1 = Json.map(item => ({
-        text: item.name,
-        link: item.mode === 3 ? '/paty/detail/' + item.id : '/article/list/' + item.id
-      }))
-    })
+    this.getMenuList()
   },
   methods: {
+    ...mapActions([
+      'getMenuList'
+    ]),
     scrollTop () {
       this.$refs.viewBox.$els.viewBoxBody.scrollTop = 0
     },
@@ -122,7 +112,8 @@ export default {
       isLoading: 'isLoading',
       direction: 'direction',
       pageTitle: 'pageTitle',
-      showTabbar: 'showTabbar'
+      showTabbar: 'showTabbar',
+      menuData1: 'menuData1'
     }),
     leftOptions () {
       return {

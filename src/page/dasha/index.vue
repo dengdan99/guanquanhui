@@ -7,7 +7,7 @@
 
     <swiper-item>
       <div class="item-list">
-        <a href="javascript:;" @click="goUrl(item)" class="item" v-for="item in commList.list1">
+        <a href="javascript:;" @click="goUrl(item)" class="item" v-for="item in commList.list3">
           <div class="img"><img :src="item.logo" class="logo" /></div>
           <div class="text">{{item.name}}</div>
         </a>
@@ -16,12 +16,13 @@
 
     <swiper-item>
       <div class="item-list">
-        <a href="javascript:;" @click="goUrl(item)" class="item" v-for="item in commList.list3">
+        <a href="javascript:;" @click="goUrl(item)" class="item" v-for="item in commList.list1">
           <div class="img"><img :src="item.logo" class="logo" /></div>
           <div class="text">{{item.name}}</div>
         </a>
       </div>
     </swiper-item>
+
     <!-- <swiper-item>
       <div class="item-list">
         <a href="javascript:;" @click="goUrl(item)" class="item" v-for="item in commList.list2">
@@ -56,8 +57,8 @@ export default {
     return {
       height: '500px',
       index: 0,
-      titles: ['企业', '社群'],
-      currentTitle: '企业'
+      titles: ['社群', '企业'],
+      currentTitle: '社群'
     }
   },
   computed: {

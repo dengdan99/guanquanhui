@@ -148,3 +148,8 @@ export const getCommunityList = ({commit}) => {
   })
 }
 
+export const getMenuList = ({commit}) => {
+  api.getAllList().then(response => {
+    commit(types.UPDATE_MENU1, response.data)
+  })
+}

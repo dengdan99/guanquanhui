@@ -2,11 +2,14 @@
   <div class="bg">
     <div class="head">
       <img src="/static/pic/index_pic_demo.jpg" class="img">
+      <div class="banner_text">
+        <p>因为您不是志愿者，所以您还没有上榜哦。但是在个人档案里，可查询自己的积分！</p>
+      </div>
       <div class="rk-item" @click="goto('/user/myzan')">
         <span class="num"></span>
-        <span class="av"><img :src="mine.avator"></span>
+        <span class="av"><img :src="mine.avator ? mine.avator : '/static/def-av.jpg'"></span>
         <span class="tit">{{mine.nickname}}</span>
-        <span class="rank green">{{mine.rank}}</span>
+        <span class="rank green">{{mine.integral}}</span>
         <span class="btn"><p class="rk">{{mine.zan}}</p><p class="hr">♥</p></span>
       </div>
     </div>
@@ -14,7 +17,7 @@
     <div class="rk-list">
       <div class="rk-item" v-for="item in rlList">
         <span class="num">{{item.rank}}</span>
-        <span class="av"><img :src="item.avator"></span>
+        <span class="av"><img :src="item.avator ? item.avator : '/static/def-av.jpg'"></span>
         <span class="tit">{{item.nickname}}</span>
         <span class="rank">{{item.integral}}</span>
         <span class="btn" @click="zan(item)">
@@ -81,12 +84,23 @@ export default {
 .bg{
   background-color: #fabf01;
 }
+.banner_text{
+  // background-color: #fff;
+  color: #fff;;
+  padding:5px;
+  font-size: 14px;
+}
 .head{
-  padding: 20px 0;
+  // padding-bottom: 20px;
   .img{
     width: 100%;
     height: auto;
     display: block;
+  }
+  .rk-item{
+    background: linear-gradient(to bottom, #ddd 0%,#ccc 100%);
+    border-top: solid 1px #999;
+    border-bottom: solid 1px #999;
   }
 }
 .rk-item{
@@ -106,6 +120,10 @@ export default {
   .tit{
     width: 35%;
     text-align: left;
+    height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .av img{
     height: 60px;

@@ -5,6 +5,7 @@ import {
   UserInfoResource,
   UserPassiveResource,
   UserSupportResource,
+  JifenResource,
   DicResource,
   PatyResource,
   baikeResource,
@@ -16,10 +17,12 @@ import {
   orderResource,
   orderListResource,
   orderMyListResource,
+  AllListResource,
   TypeResource,
   ArticleHomeResource,
   ArticleLatestResource,
   ArticleDatesResource,
+  ArticlePraiseResource,
   PatyAboutResource,
   volunteerStateResourec,
   volunteerResourec,
@@ -31,12 +34,13 @@ import {
   toupiaoIssuelistResourec,
   toupiaoIssueResourec,
   toupiaoDetailResourec,
-  toupiaoListResourec
+  toupiaoListResourec,
+  clubMasterResourec
 
 } from './resources'
 
 export const getPack = () => {
-  return PackResource.get()
+  return PackResource.get({signUrl: location.href.split('#')[0]})
 }
 export const getArticleList = (id, options) => {
   return ArticleListResource.get({id, ...options})
@@ -49,6 +53,9 @@ export const getArticleLatest = () => {
 }
 export const getArticleDates = (options) => {
   return ArticleDatesResource.get(options)
+}
+export const doPraise = (id) => {
+  return ArticlePraiseResource.get({id})
 }
 
 export const updateFrontUserInfo = (uid, options) => {
@@ -105,14 +112,14 @@ export const newOrder = (options) => {
 export const starOrder = (id, options) => {
   return orderResource.update({id}, options)
 }
-export const getorderMyListResource = () => {
-  return orderMyListResource.get()
+export const getorderMyListResource = (options) => {
+  return orderMyListResource.get(options)
 }
 export const getorderUserPassive = (options) => {
   return UserPassiveResource.get(options)
 }
 export const getAllList = () => {
-  return TypeResource.get({id: ''})
+  return AllListResource.get()
 }
 export const getAdList = (id) => {
   return TypeResource.get({id})
@@ -128,6 +135,9 @@ export const volunteer = (options) => {
 }
 export const getUserRank = (options) => {
   return UserRankResource.get(options)
+}
+export const getJifen = () => {
+  return JifenResource.get()
 }
 export const getTelResource = () => {
   return telResource.get()
@@ -155,4 +165,7 @@ export const getToupiaoDetail = (id) => {
 }
 export const getToupiaoList = (options) => {
   return toupiaoListResourec.get({...options})
+}
+export const getClubMaster = () => {
+  return clubMasterResourec.get()
 }

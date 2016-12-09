@@ -36,8 +36,8 @@ let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
 
 if (process.env.NODE_ENV !== 'production') {
-  auth.saveCookie('token', 'demo')
-  auth.saveCookie('uid', 20)
+  auth.saveCookie('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJzaGEyNTYifQ==.eyJpc3MiOiJLZW5ueSBIdSBKV1QiLCJpYXQiOjE0Nzk4ODQwMTUsImV4cCI6MTQ3OTg5MTIxNSwiYXVkIjoicWQuaGgud2FuZ3ppcWluZy5jYyIsInN1YiI6IkpvaG4gV3UgSldUIiwidWlkIjozMH0=.ced24c5697322c0553bc60270636e94e580d8103077fbd904339bf5e2de10803')
+  auth.saveCookie('uid', 24)
 }
 
 /**
@@ -47,13 +47,19 @@ router.beforeEach(({ to, from, next }) => {
   const toIndex = history.getItem(to.path)
   const fromIndex = history.getItem(from.path)
 
-  // if (!/login/.test(to.path)) {
-  //   if (!auth.isLogin()) {
-  //     auth.saveCookie('startPage', to.path)
-  //     window.location.href = 'http://hh.wangziqing.cc/api/wechat/oauth2'
-  //     return
-  //   }
-  // }
+  if (!/login/.test(to.path)) {
+    if (!auth.isLogin()) {
+      auth.saveCookie('startPage', to.path)
+      Vue.$vux.toast.show({
+        type: 'text',
+        text: '正在获取微信授权，请稍后...'
+      })
+      setTimeout(() => (
+        window.location.href = 'http://hh.wangziqing.cc/api/wechat/oauth2'
+      ), 2000)
+      return
+    }
+  }
 
   if (toIndex) {
     if (toIndex > fromIndex) {

@@ -67,6 +67,9 @@ export default {
     h2{
       text-align: center;
       font-weight: normal;
+      margin-bottom: 20px;
+      border-bottom: solid 1px #ccc;
+      padding-bottom: 10px;
     }
     .pic img{
       width: 100%;

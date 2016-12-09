@@ -3,6 +3,9 @@
   <div class="info-header">
     <h3>完成资料填写有小惊喜哦</h3>
   </div>
+  <div class="userInfo">
+    <img :src="userInfo.avator" class="av_img">
+  </div>
   <group title="基本资料">
     <x-input title="姓名" name="username" :value.sync="userInfo.nickname" placeholder="" is-type="china-name"></x-input>
     <datetime
@@ -22,6 +25,7 @@
     <popup-picker :fixed-columns="2" :columns="1" :data="dic.profession" title="职业" :value.sync="showJob" show-name placeholder="" ></popup-picker>
     <popup-picker :fixed-columns="2" :columns="1" :data="dic.feature" title="政治面貌" :value.sync="showParty" show-name placeholder="" ></popup-picker>
     <popup-picker :fixed-columns="2" :columns="1" :data="dic.area" title="所在社区" :value.sync="showArea" show-name placeholder="" ></popup-picker>
+    <cell title="我的积分" :link="'/article/detail/' + articleId" value="查看"></cell>
   </group>
   <p style="margin-top: 10px;">
     <x-button type="primary" @click="doPost">确认修改</x-button>
@@ -30,10 +34,10 @@
 </template>
 
 <script>
-import { Switch, Group, XInput, Checklist, XButton, Radio, PopupPicker, Datetime } from '../../components'
+import { Switch, Group, XInput, Checklist, XButton, Radio, PopupPicker, Datetime, Cell } from '../../components'
 import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
-import { updateFrontUserInfo } from '../../api/'
+import { updateFrontUserInfo, getJifen } from '../../api/'
 
 export default {
   components: {
@@ -44,7 +48,8 @@ export default {
     XButton,
     Radio,
     PopupPicker,
-    Datetime
+    Datetime,
+    Cell
   },
   ready () {
     // 获取user 并 赋值
@@ -62,9 +67,13 @@ export default {
         this.showArea.push(this.userInfo.area_id.toString())
       }
     })
+    getJifen().then(res => {
+      this.articleId = res.data.id
+    })
   },
   data () {
     return {
+      articleId: 0,
       weeksList: ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
       showGender: [],
       showJob: [],
@@ -97,9 +106,9 @@ export default {
         mobile: this.userInfo.mobile,
         birthday: this.userInfo.birthday,
         sex: this.showGender.length === 0 ? 0 : this.showGender[0],
-        profession_id: this.showJob.length === 0 ? 0 : this.showJob[0],
-        feature_id: this.showParty.length === 0 ? 0 : this.showParty[0],
-        area_id: this.showArea.length === 0 ? 0 : this.showArea[0]
+        professionId: this.showJob.length === 0 ? 0 : this.showJob[0],
+        featureId: this.showParty.length === 0 ? 0 : this.showParty[0],
+        areaId: this.showArea.length === 0 ? 0 : this.showArea[0]
       }
       if (!this.checkPost(postData)) {
         this.$vux.toast.show({
@@ -135,9 +144,15 @@ export default {
 </script>
 
 <style scoped lang="less">
+.av_img{
+  display: block;
+  border-radius: 100%;
+  margin: 15px auto;
+  height: 80px;
+  width: 80px;
+}
 .o-bg{
   background-color: #fabf01;
-  height: 100%;
 }
 .o-bg .weui_cell{
   background-color: #fabf01;

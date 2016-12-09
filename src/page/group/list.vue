@@ -7,7 +7,7 @@
     <div class="pic"><div class="img-area"><img :src="item.logo" /></div></div>
     <div class="text">
       <h4 class="title">{{item.name}} <span class="join_num">加入人数{{item.is_allow_join}}</span></h4>
-      <p class="desc">{{item.description}}</p>
+      <p class="desc">{{item.abstract}}</p>
     </div>
   </div>
 </div>

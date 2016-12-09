@@ -33,6 +33,12 @@ Vue.http.interceptors.push((request, next) => {
       signOut()
       window.location = weixinLogin
     }
+    if (response.status === 500) {
+      Vue.$vux.toast.show({
+        type: 'warn',
+        text: '服务器内部错误，请稍后重试'
+      })
+    }
   })
 })
 export const PackResource = Vue.resource(API_ROOT + 'api/wechat/package')
@@ -42,13 +48,16 @@ export const UserRankResource = Vue.resource(API_ROOT + 'api/user/intergral/rank
 export const UserPassiveResource = Vue.resource(API_ROOT + 'api/sustain/passive{/controller}')
 export const UserSupportResource = Vue.resource(API_ROOT + 'api/sustain/support{/id}')
 export const VolunteerRuleResource = Vue.resource(API_ROOT + 'api/volunteer/rule')
+export const JifenResource = Vue.resource(API_ROOT + 'api/volunteer/master')
 
+export const AllListResource = Vue.resource(API_ROOT + 'api/type')
 export const TypeResource = Vue.resource(API_ROOT + 'api/type{/id}')
 export const ArticleListResource = Vue.resource(API_ROOT + 'api/article/list{/id}{/controller}')
 export const ArticleResource = Vue.resource(API_ROOT + 'api/article/detail{/id}')
 export const ArticleHomeResource = Vue.resource(API_ROOT + 'api/article/home{/controller}')
 export const ArticleLatestResource = Vue.resource(API_ROOT + 'api/article/latest')
 export const ArticleDatesResource = Vue.resource(API_ROOT + 'api/article/dates{/controller}')
+export const ArticlePraiseResource = Vue.resource(API_ROOT + '/api/article/praise{/id}')
 
 export const DicResource = Vue.resource(API_ROOT + 'api/home/common')
 export const PatyLastResource = Vue.resource(API_ROOT + 'api/activity/latest')
@@ -76,3 +85,5 @@ export const toupiaoIssuelistResourec = Vue.resource(API_ROOT + 'api/issue/theme
 export const toupiaoIssueResourec = Vue.resource(API_ROOT + 'api/record/issue{/tid}/solution{/pid}')
 export const toupiaoDetailResourec = Vue.resource(API_ROOT + 'api/theme{/id}')
 export const toupiaoListResourec = Vue.resource(API_ROOT + 'api/theme{/controller}')
+
+export const clubMasterResourec = Vue.resource(API_ROOT + 'api/club/master')

@@ -13,14 +13,15 @@
     <div class="item-r">
       <div class="av"><img src="/static/av_qun.jpg"></div>
       <div class="msgarea">
-        <p class="gray">主人，小观乐意为您解答，您觉得解答得好，请为我亮起5颗星哟！</p>
+        <p class="gray">主人，您下订单我来答复，记得留下手机号方便联系您哦！您也可以在“关注我—我的订单”栏查找订单！订单处理得好，主人请为我亮起5颗星星，吼吼！
+        </p>
       </div>
     </div>
   </div>
 
   <div class="bot">
     <div class="mob-input">
-      <input class="inp" v-model="mobile"  placeholder="请输入手机号码" keyboard="number" />
+      <input class="inp" style="font-size:14px;" v-model="mobile"  placeholder="主人，请输手机号码，爱你么么哒" keyboard="number" />
     </div>
     <x-button type="primary" @click="doPost">提交</x-button>
   </div>
@@ -71,12 +72,12 @@ export default {
       }).then(response => {
         this.hideLoading()
         const Json = response.data
-        if (Json.result === true) {
+        if (typeof Json.id !== 'undefined') {
           this.$vux.toast.show({
             type: 'success',
             text: '提交成功'
           })
-          go('/order/view/' + '1', this.$router)
+          go('/order/view/' + Json.id, this.$router)
         } else {
           this.$vux.toast.show({
             type: 'text',
@@ -180,13 +181,13 @@ export default {
   margin: 0 auto;
   text-align: center;
   .mob-input{
-    margin: 40px 0 20px 0;
+    margin: 40px 0 15px 0;
   }
   .inp{
     border:solid 3px #000;
     border-radius: 3px;
-    padding: 10px 15px;
-    width: 80%;
+    padding: 10px 10px;
+    width: 90%;
   }
 }
 .weui_btn_primary{

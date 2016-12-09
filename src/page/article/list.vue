@@ -2,12 +2,12 @@
   <div>
     <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" @pullup:loading="load" height="-50px" keep-alive>
       <div class="box2">
-      <swiper :list="banner_list" auto height="180px" dots-class="custom-bottom" dots-position="center"></swiper>
+      <swiper :list="banner_list" auto height="210px" dots-class="custom-bottom" dots-position="center"></swiper>
       <div class="zt_list" @click="goto(item)" v-for="item in articleList">
         <div class="pic"><div class="img-area"><img :src="item.image" /></div></div>
         <div class="text">
           <h4 class="title">{{item.title}}</h4>
-          <p class="desc">{{item.title}}</p>
+          <p class="desc">{{item.abstract}}</p>
         </div>
       </div>
       </div>
@@ -118,7 +118,11 @@ export default {
       })
     },
     goto (item) {
-      go('/article/detail/' + item.id, this.$router)
+      if (item.jump !== '' && item.jump.indexOf('http') >= 0) {
+        window.location.href = item.jump
+      } else {
+        go('/article/detail/' + item.id, this.$router)
+      }
     }
   }
 }

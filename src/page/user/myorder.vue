@@ -1,10 +1,10 @@
 <template>
 <div>
-  <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" height="-50px"  @pullup:loading="load" keep-alive>
+<!--   <scroller lock-x scrollbar-y use-pullup :pullup-config="pullupConfig" height="-50px"  @pullup:loading="load" keep-alive v-ref:scroller> -->
   <div class="box2">
     <div class="od-head">
       <div class="item">
-        <div class="title">标题</div>
+        <div class="title">我的订单</div>
         <div class="status">状态</div>
         <div class="zan">点赞</div>
       </div>
@@ -12,10 +12,12 @@
     <div class="item" v-for="li in list" @click="goto(li)" :class="($index + 1) % 2 === 0 ? 'odd' : ''">
       <div class="title">{{li.ask.substring(0,6)+'...'}}</div>
       <div class="status">{{li.state_name}}</div>
-      <div class="zan"><div class="star">★<span class="badge">{{li.star}}</span></div><</div>
+      <div class="zan">
+        <div class="star iconfont">&#xe62e;<span class="badge">{{li.star}}</span></div>
+      </div>
     </div>
   </div>
-  </scroller>
+  <!-- </scroller> -->
 </div>
 </template>
 
@@ -37,6 +39,9 @@ export default {
       const Json = response.data
       this.list = Json.results
       this.param.offset += this.param.size
+      // if (Json.results.length < this.param.size) {
+      //   this.$broadcast('pullup:done', this.$refs.scroller.uuid)
+      // }
     })
   },
   data () {
@@ -57,30 +62,41 @@ export default {
   methods: {
     goto (item) {
       go('/order/view/' + item.id, this.$router)
-    },
-    load (uuid) {
-      getorderMyListResource({
-        offset: this.param.offset,
-        size: this.param.size
-      }).then(res => {
-        const Json = res.data.results
-        this.param.offset += this.param.size
-        this.$broadcast('pullup:reset', uuid)
-        this.list = [...this.list, ...Json]
-        if (Json.length === this.param.size) {
-          this.$broadcast('pullup:reset', uuid)
-        } else {
-          this.$broadcast('pullup:done', uuid)
-        }
-      })
     }
+    // load (uuid) {
+    //   getorderMyListResource({
+    //     offset: this.param.offset,
+    //     size: this.param.size
+    //   }).then(res => {
+    //     const Json = res.data.results
+    //     this.param.offset += this.param.size
+    //     this.$broadcast('pullup:reset', uuid)
+    //     this.list = [...this.list, ...Json]
+    //     if (Json.length === this.param.size) {
+    //       this.$broadcast('pullup:reset', uuid)
+    //     } else {
+    //       this.$broadcast('pullup:done', uuid)
+    //     }
+    //   })
+    // }
   }
 }
 </script>
 
 <style scoped lang="less">
 .od-head{
-  padding-bottom: 20px;
+  .item{
+    color: #fff;
+    .title{
+      background: linear-gradient(to right, #22605a 0%,#39939f 15%);
+    }
+    .status{
+      background: linear-gradient(to right, #aa700b 0%,#b58b06 15%);
+    }
+    .zan{
+      background: linear-gradient(to right, #22605a 0%,#39939f 15%);
+    }
+  }
 }
 .item{
   height: 50px;

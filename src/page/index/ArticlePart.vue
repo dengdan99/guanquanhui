@@ -1,21 +1,21 @@
 <template>
-  <div>
+  <div v-show="pshow">
 
-    <div class="zt_list" @click="gotoP(paty)">
+    <div class="zt_list" @click="gotoP(paty)" v-if="paty.code !== '100006'">
       <div class="pic"><div class="img-area"><img :src="paty.image" /></div></div>
       <div class="text">
         <h3 class="title">{{paty.title}}</h3>
         <p class="desc">{{paty.abstract}}</p>
       </div>
     </div>
-    <div class="zt_list" @click="gotoT(toupiao)">
+    <div class="zt_list" @click="gotoT(toupiao)" v-if="toupiao.code !== '100006'">
       <div class="pic"><div class="img-area"><img :src="toupiao.image" /></div></div>
       <div class="text">
         <h3 class="title">{{toupiao.theme}}</h3>
         <p class="desc">{{toupiao.abstract}}</p>
       </div>
     </div>
-    <div class="zt_list" @click="gotoA(article)">
+    <div class="zt_list" @click="gotoA(article)" v-if="article.code !== '100006'">
       <div class="pic"><div class="img-area"><img :src="article.image" /></div></div>
       <div class="text">
         <h3 class="title">{{article.title}}</h3>
@@ -40,16 +40,20 @@ export default {
   ready () {
     getPatyLast().then(res => {
       this.paty = res.data
+      this.pshow = true
     })
     getLatestLast().then(res => {
       this.toupiao = res.data
+      this.pshow = true
     })
     getArticleLatest().then(res => {
       this.article = res.data
+      this.pshow = true
     })
   },
   data () {
     return {
+      pshow: false,
       paty: {},
       toupiao: {},
       article: {}
@@ -65,7 +69,7 @@ export default {
       go('/paty/detail/' + item.id, this.$router)
     },
     gotoT (item) {
-      go('/dasha/club/' + item.id, this.$router)
+      go('/toupiao/detail/' + item.id, this.$router)
     },
     gotoA (item) {
       go('/article/detail/' + item.id, this.$router)

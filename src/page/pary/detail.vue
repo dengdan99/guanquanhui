@@ -1,5 +1,6 @@
 <template>
   <div class="bg-withe">
+  <div class="s-bg" v-show="shareBg" @click="toggleShareBg"><img src="/static/share.png" /></div>
 <!--       <tab :line-width=2 active-color='#fabf01' :index.sync="index">
         <tab-item class="vux-center" :selected="demo2 === item" v-for="item in titles" @click="demo2 = item">{{item}}</tab-item>
       </tab>
@@ -9,17 +10,32 @@
           <div class="pary-area" v-if="paty.title">
             <div class="datail">
               <h2>{{paty.title}}</h2>
-              <div class="desc">{{paty.abstract}}</div>
+              <div class="desc" v-if="paty.abstract">{{paty.abstract}}</div>
+              <div class="other_info">
+              <p class="iconfont"><b>&#xe678; 活动地址：</b>{{paty.address}}</p>
+              <p class="iconfont"><b>&#xe678; 活动时间：</b>{{paty.active_time}}</p>
+              <p class="iconfont"><b>&#xe678; 活动费用：</b>{{paty.fee}}</p>
+              <p class="iconfont"><b>&#xe678; 奖励积分：</b>{{paty.integral}}</p>
+              <p class="iconfont"><b>&#xe678; 奖励规则：</b>{{paty.reward}}</p>
+              </div>
               <div class="content" id="article_content">{{{paty.content}}}</div>
               <!-- <div class="p-info">
                 <span>浏览 {{paty.click}}</span>
                 <span>收藏 {{paty.favorite}}</span>
               </div> -->
+              <div class="other_info">
+              <p class="iconfont"><b>&#xe678; 活动地址：</b>{{paty.address}}</p>
+              <p class="iconfont"><b>&#xe678; 活动时间：</b>{{paty.active_time}}</p>
+              <p class="iconfont"><b>&#xe678; 活动费用：</b>{{paty.fee}}</p>
+              <p class="iconfont"><b>&#xe678; 奖励积分：</b>{{paty.integral}}</p>
+              <p class="iconfont"><b>&#xe678; 奖励规则：</b>{{paty.reward}}</p>
+              </div>
             </div>
+            <div class="d-line"></div>
             <g-media :lists="artilceList"></g-media>
             <div class="zmPic">
               <x-button type="primary" @click="showdialog=true">立即参与</x-button>
-              <x-button type="primary" @click="share">分享到朋友圈</x-button>
+              <x-button type="primary" @click="share">分享到...</x-button>
             </div>
           </div>
         <!-- </swiper-item>
@@ -48,6 +64,7 @@
         <group title="">
           <div class="zmPic">
             <x-button type="primary" @click="doPost">提交</x-button>
+            <x-button type="default" @click="showdialog=false">取消</x-button>
           </div>
         </group>
       </dialog>
@@ -75,6 +92,17 @@ export default {
     canReuse: false
   },
   ready () {
+    getPack().then(res => {
+      const Json = res.data
+      window.wx.config({
+        debug: false,
+        appId: Json.appId,
+        timestamp: Json.timestamp,
+        nonceStr: Json.nonceStr,
+        signature: Json.signature,
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone']
+      })
+    })
     this.getPaty(this.$route.params.id).then((res) => {
       // this.$nextTick(function () {
       //   this.$refs.swiper.rerender()
@@ -93,20 +121,10 @@ export default {
       }))
     })
     this.height = (document.body.clientHeight - 50 - 44) + 'px'
-    getPack().then(res => {
-      // const pack = res.data
-      // window.wx.config({
-      //   debug: true,
-      //   appId: pack.appId,
-      //   timestamp: pack.timestamp,
-      //   nonceStr: pack.nonceStr,
-      //   signature: pack.signature,
-      //   jsApiList: ['onMenuShareTimeline']
-      // })
-    })
   },
   data () {
     return {
+      shareBg: false,
       patyId: 0,
       zmPic: 'static/pic_qun.jpg',
       titles: ['活动展示', '群主招募'],
@@ -134,21 +152,109 @@ export default {
       'hideTabbar',
       'getPaty'
     ]),
+    toggleShareBg () {
+      this.shareBg = !this.shareBg
+    },
     share () {
-      // var self = this
-      // window.wx.onMenuShareTimeline({
-      //   title: self.paty.title,
-      //   link: 'http://qd.hh.wangzhi.cc/#!/' + self.$route.path,
-      //   imgUrl: '',
-      //   success: function () {
-      //     alert('分享成功')
-      //   },
-      //   cancel: function () {
-      //   }
-      // })
+      var self = this
+      this.shareBg = true
+      const baseUrl = 'http://qd.hh.wangziqing.cc/#!'
+      window.wx.ready(function () {
+        window.wx.onMenuShareTimeline({
+          title: self.paty.title,
+          link: baseUrl + self.$route.path,
+          imgUrl: self.paty.image,
+          success: function () {
+            self.$vux.toast.show({
+              type: 'success',
+              text: '分享成功'
+            })
+          },
+          cancel: function () {
+            console.log('用户取消分享')
+          },
+          fail: function (res) {
+            console.log('分享错误', res)
+          }
+        })
+        window.wx.onMenuShareAppMessage({
+          title: self.paty.title,
+          desc: self.paty.abstract,
+          link: baseUrl + self.$route.path,
+          imgUrl: self.paty.image,
+          success: function () {
+            self.$vux.toast.show({
+              type: 'success',
+              text: '分享成功'
+            })
+          },
+          cancel: function () {
+            console.log('用户取消分享')
+          },
+          fail: function (res) {
+            console.log('分享错误', res)
+          }
+        })
+        window.wx.onMenuShareQQ({
+          title: self.paty.title,
+          desc: self.paty.abstract,
+          link: baseUrl + self.$route.path,
+          imgUrl: self.paty.image,
+          success: function () {
+            self.$vux.toast.show({
+              type: 'success',
+              text: '分享成功'
+            })
+          },
+          cancel: function () {
+            console.log('用户取消分享')
+          },
+          fail: function (res) {
+            console.log('分享错误', res)
+          }
+        })
+        window.wx.onMenuShareWeibo({
+          title: self.paty.title,
+          desc: self.paty.abstract,
+          link: baseUrl + self.$route.path,
+          imgUrl: self.paty.image,
+          success: function () {
+            self.$vux.toast.show({
+              type: 'success',
+              text: '分享成功'
+            })
+          },
+          cancel: function () {
+            console.log('用户取消分享')
+          },
+          fail: function (res) {
+            console.log('分享错误', res)
+          }
+        })
+        window.wx.onMenuShareQZone({
+          title: self.paty.title,
+          desc: self.paty.abstract,
+          link: baseUrl + self.$route.path,
+          imgUrl: self.paty.image,
+          success: function () {
+            self.$vux.toast.show({
+              type: 'success',
+              text: '分享成功'
+            })
+          },
+          cancel: function () {
+            console.log('用户取消分享')
+          },
+          fail: function (res) {
+            console.log('分享错误', res)
+          }
+        })
+        window.wx.error(res => {
+          console.log(res)
+        })
+      })
     },
     doPost () {
-      this.showdialog = false
       let postData = {
         name: this.joinPost.name,
         mobile: this.joinPost.mobile
@@ -167,7 +273,7 @@ export default {
         })
         return false
       }
-
+      this.showdialog = false
       signupPaty(this.$route.params.id, postData).then(response => {
         let json = response.data
         if (json.result === true) {
@@ -192,6 +298,18 @@ export default {
 </script>
 
 <style scoped lang="less">
+.s-bg{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  opacity: 0.8;
+  background-color: #000;
+  z-index: 999;
+  img{
+    width: 100%;
+    height: auto;
+  }
+}
 .vux-tab .vux-tab-item{
   font-size: 16px
 }
@@ -224,6 +342,8 @@ export default {
       text-align: center;
       font-weight: normal;
       margin-bottom: 20px;
+      border-bottom: solid 1px #ccc;
+      padding-bottom: 10px;
     }
     .desc{
       border:solid 1px #7d7d7d;
@@ -233,6 +353,19 @@ export default {
     .p-info{
       margin: 10px 0;
       text-align: right;
+    }
+    .other_info{
+      padding: 10px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #666;
+      border: solid 1px #fbbe01;
+      border-radius: 5px;
+      background: linear-gradient(to bottom, #fee7a1 0%, #fabf01 100%);
+      b{
+        font-weight: bold;
+        color: #000;
+      }
     }
   }
 }

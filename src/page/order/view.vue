@@ -38,11 +38,13 @@
       </div>
     </div>
   </div>
-  <div class="star_area">
+  <div class="star_area" v-show="order.state >= 3">
       <rater :value.sync="star" class="iconfont" slot="value" star="&#xe62e;" :disabled="star_dis"></rater>
   </div>
 
-  <div class="bottt" v-show="!star_dis">
+  <div class="s-tips" style="color:#fff; padding: 10px 20px;" v-show="order.state >= 3 && star <= 3 && showText">主人，小的为您鞍前马后，那么辛苦，亮起5颗星给点正能量鼓励咯</div>
+
+  <div class="bottt" v-show="!star_dis && order.state >= 3 && showText">
     <x-button type="primary" @click="doZan">点赞</x-button>
   </div>
   </group>
@@ -55,6 +57,7 @@ import { Group, XInput, XTextarea, XButton, Step, StepItem, Cell, Rater } from '
 import { getOrder, starOrder } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
+import { getCookie } from '../../libs/authService'
 
 export default {
   components: {
@@ -72,6 +75,7 @@ export default {
   },
   data () {
     return {
+      showText: false,
       star: 0,
       order: {}
     }
@@ -97,6 +101,9 @@ export default {
         const Json = response.data
         this.order = Json
         this.star = Json.star
+        if (getCookie('uid') === Json.user_id) {
+          this.showText = true
+        }
       })
     },
     doZan () {
@@ -266,9 +273,10 @@ export default {
 }
 .order-bg{
   background-color: #222222;
-  height: 100%;
+  min-height: 600px;
   .star_area{
     text-align: center;
+    padding-bottom: 20px;
   }
 }
 .order-bot{
@@ -278,6 +286,7 @@ export default {
   width: 250px;
   margin: 0 auto;
   text-align: center;
+  padding-bottom: 10px;
   .mob-input{
     margin: 40px 0 20px 0;
   }

@@ -2,7 +2,7 @@
   <div>
     <div class="index-header">
       <div class="userInfo">
-        <img :src="userInfo.avator === '' ? '/static/def-av.jpg' : userInfo.avator" class="av_img">
+        <img :src="userInfo.avator" class="av_img">
         <div class="nickName">{{userInfo.nickname}}</div>
       </div>
 
@@ -41,19 +41,19 @@
           </a>
         </flexbox-item>
         <flexbox-item>
-          <a class="item item2" href="javascript:;" @click="goUrl('/paty/detail/2')">
+          <a class="item item2" href="javascript:;" @click="goUrl('/paty/detail/' + newPaty_id)">
             <div class="img iconfont">&#xe678;</div>
             <div class="text">最新活动</div>
           </a>
         </flexbox-item>
         <flexbox-item>
-          <a class="item item3" href="javascript:;" @click="goUrl('/toupiao/detail/' + latest.id)">
+          <a class="item item3" href="javascript:;" @click="goUrl('/toupiao/detail/' + newToupiao_id)">
             <div class="img iconfont">&#xe639;</div>
             <div class="text">最新投票</div>
           </a>
         </flexbox-item>
         <flexbox-item>
-          <a class="item item4" href="javascript:;" @click="goUrl('/group/list')">
+          <a class="item item4" href="javascript:;" @click="goUrl('/article/detail/' + club_id)">
             <div class="img iconfont">&#xe708;</div>
             <div class="text">我要当群主</div>
           </a>
@@ -81,6 +81,7 @@ import { Flexbox, FlexboxItem, GMedia } from '../../components'
 import ArticlePart from '../index/ArticlePart'
 import { mapActions, mapGetters } from 'vuex'
 import { go } from '../../libs/router'
+import { getLatestLast, getPatyLast, getClubMaster } from '../../api/'
 
 export default {
   components: {
@@ -92,9 +93,21 @@ export default {
   ready () {
     this.getUserInfo()
     this.setPageTitle('用户中心')
+    getLatestLast().then(res => {
+      this.newToupiao_id = res.data.id
+    })
+    getPatyLast().then(res => {
+      this.newPaty_id = res.data.id
+    })
+    getClubMaster().then(res => {
+      this.club_id = res.data.id
+    })
   },
   data () {
     return {
+      club_id: 1,
+      newToupiao_id: 1,
+      newPaty_id: 1,
       artilceList: [
         {
           src: '/static/demo/comment/2.jpg',
@@ -193,7 +206,7 @@ export default {
 }
 .nickName{
   color: #fff;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
 }
 .rule-box{

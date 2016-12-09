@@ -15,10 +15,10 @@
     </div>
 
     <div class="tep1 tep" v-show="status === 1">
-      <div class="img iconfont">&#xe7cd;</div>
+      <div class="img iconfont">&#xe649;</div>
       <p>主人， 您已经成为了一名光荣的志愿者</p>
-      <x-button class="bt10" type="primary" @click="goto('/user/index')">参与更多活动</x-button>
-      <x-button type="primary" @click="goto('/user/index')">查看志愿者积分榜</x-button>
+      <x-button class="bt10" type="primary" @click="goto('/paty/index')">参与更多活动</x-button>
+      <x-button type="primary" @click="goto('/user/rank')">查看志愿者积分榜</x-button>
     </div>
 
   </div>

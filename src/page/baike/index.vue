@@ -1,10 +1,12 @@
 <template>
 <div>
   <group title="办事百科">
-    <x-input title="" placeholder="社区服务 医院 社保 维修 学校 机关" :value.sync="sreachData.keyword">
+    <div class="m-s">
+    <x-input title="" placeholder="输入关键词查询办事电话" :value.sync="sreachData.keyword">
       <x-button slot="right" type="primary" mini @click="fristLoad">搜索</x-button>
       <x-button slot="right" type="primary" mini @click="showBook">常用电话</x-button>
     </x-input>
+    </div>
     <popup-picker :fixed-columns="2" :columns="1" :data="dic.baikeType" title="按类别搜索" :value.sync="sreachData.type" show-name placeholder="请选择类别" ></popup-picker>
     <popup-picker :fixed-columns="2" :columns="1" :data="dic.district" title="按区域搜索" :value.sync="sreachData.district" show-name placeholder="请选择区域" ></popup-picker>
     
@@ -48,7 +50,7 @@ export default {
   ready () {
     this.getDic()
     this.showBook()
-    this.height = '-215px'
+    this.height = '-220px'
   },
   data () {
     return {
@@ -138,6 +140,12 @@ export default {
 </script>
 
 <style scoped lang="less">
+.m-s{
+  .weui_input{
+    text-align: left;
+    font-size: 12px;
+  }
+}
 .bk_it {
   background-color: #fabf01;
   margin: 10px;
@@ -168,5 +176,13 @@ export default {
 .weui_btn_primary{
   margin-left: 10px;
   margin-top: 0;
+}
+</style>
+<style lang="less">
+.m-s{
+  .weui_input{
+    text-align: left;
+    font-size: 14px;
+  }
 }
 </style>

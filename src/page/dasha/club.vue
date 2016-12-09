@@ -7,9 +7,10 @@
         <div class="content">{{{data.description}}}</div>
       </div>
     </div>
+    <div class="d-line"></div>
     <div class="zmPic">
       <x-button type="primary" @click="showdialog=true">立即加入社群</x-button>
-      <x-button type="primary" @click="showdialog2=true">我要当群主</x-button>
+      <!-- <x-button type="primary" @click="showdialog2=true">我要当群主</x-button> -->
     </div>
 
     <dialog :show.sync="showdialog" class="dialog-demo" :hide-on-blur="true">
@@ -20,6 +21,7 @@
         <group title="">
           <div class="zmPic">
             <x-button type="primary" @click="doPost">加入社群</x-button>
+            <x-button type="default" @click="showdialog=false">取消</x-button>
           </div>
         </group>
       </dialog>
@@ -32,6 +34,7 @@
         <group title="">
           <div class="zmPic">
             <x-button type="primary" @click="doPostBoss">我要当群主</x-button>
+            <x-button type="default" @click="showdialog2=false">取消</x-button>
           </div>
         </group>
       </dialog>
@@ -83,14 +86,14 @@ export default {
       if (!this.$refs.nameboss.valid) {
         this.$vux.toast.show({
           type: 'text',
-          text: this.$refs.name.firstError
+          text: this.$refs.nameboss.firstError
         })
         return false
       }
       if (!this.$refs.mobileboss.valid) {
         this.$vux.toast.show({
           type: 'text',
-          text: this.$refs.mobile.firstError
+          text: this.$refs.mobileboss.firstError
         })
         return false
       }
@@ -186,6 +189,9 @@ export default {
     h2{
       text-align: center;
       font-weight: normal;
+      margin-bottom: 20px;
+      border-bottom: solid 1px #ccc;
+      padding-bottom: 10px;
     }
     .pic img{
       width: 100%;

@@ -12,6 +12,24 @@ export const articleIsMore = state => state.article.isMore
 export const userInfo = state => state.user.info
 
 export const dic = state => state.apps.dic
+export const menuData1 = state => {
+  return state.apps.menuData1.map(item => {
+    let _link = ''
+    if (item.mode === 3) {
+      if (item.id === 0) {
+        _link = '/paty/index'
+      } else {
+        _link = '/paty/detail/' + item.id
+      }
+    } else {
+      _link = '/article/list/' + item.id
+    }
+    return {
+      text: item.name,
+      link: _link
+    }
+  })
+}
 
 export const patyList = state => state.paty.items
 export const patyIsMore = state => state.paty.isMore
